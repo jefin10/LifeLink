@@ -1,0 +1,262 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Inter, "Noto Sans", sans-serif;
+}
+
+body {
+    background-color: #fcf8f8;
+    min-height: 100vh;
+}
+
+/* Header styles */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 40px;
+    border-bottom: 1px solid #f3e7e7;
+    background-color: #fcf8f8;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: #1b0e0e;
+}
+
+.logo {
+    width: 16px;
+    height: 16px;
+}
+
+.brand-name {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+}
+
+.nav-links {
+    display: flex;
+    gap: 36px;
+}
+
+.nav-link {
+    color: #1b0e0e;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+}
+.nav-right{
+    display: flex;
+    flex-direction: row;
+}
+.header-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.icon-button {
+    background-color: #f3e7e7;
+    border: none;
+    border-radius: 9999px;
+    height: 40px;
+    width: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Main layout */
+.main-container {
+    display: flex;
+    padding: 20px 24px;
+    gap: 4px;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 320px;
+    background-color: #fcf8f8;
+    padding: 16px;
+}
+/* In hospital.css or doctor-side.css */
+
+.sidebar2 {
+    width: 20%;
+    padding: 20px;
+    background-color: #fff;
+  }
+  
+  .sidebar-link2 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    color: #1b0e0e;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+  
+  
+  
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 12px;
+    color: #1b0e0e;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.active {
+    background-color: #f3e7e7;
+    width:4px;
+    border-radius: 999px;
+}
+
+/* Main content */
+.main-content {
+    flex: 1;
+    max-width: 960px;
+}
+
+.dashboard-header {
+    margin-bottom: 16px;
+}
+
+.dashboard-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1b0e0e;
+    margin-bottom: 12px;
+}
+
+.dashboard-subtitle {
+    color: #974e4e;
+    font-size: 14px;
+}
+
+/* Stats cards */
+.stats-container {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.stat-card {
+    flex: 1;
+    min-width: 158px;
+    padding: 24px;
+    border: 1px solid #e7d0d0;
+    border-radius: 12px;
+}
+
+.stat-label {
+    font-size: 16px;
+    color: #1b0e0e;
+    margin-bottom: 8px;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1b0e0e;
+}
+
+/* Action cards */
+.action-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border: 1px solid #e7d0d0;
+    border-radius: 12px;
+    margin-bottom: 16px;
+}
+
+.action-button {
+    background-color: #e61919;
+    color: #fcf8f8;
+    border: none;
+    border-radius: 9999px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    min-width: 84px;
+}
+.action-button-2 {
+    background-color: green;
+    color: #fcf8f8;
+    border: none;
+    border-radius: 9999px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    min-width: 84px;
+}
+/* Table styles */
+.table-container {
+    border: 1px solid #e7d0d0;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+    padding: 12px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1b0e0e;
+}
+
+td {
+    padding: 12px 16px;
+    font-size: 14px;
+    color: #974e4e;
+    height: 72px;
+    border-top: 1px solid #e7d0d0;
+}
+
+td:first-child {
+    color: #1b0e0e;
+}
+
+@media (max-width: 768px) {
+    .main-container {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+    }
+
+    .stats-container {
+        flex-direction: column;
+    }
+
+    .stat-card {
+        width: 100%;
+    }
+
+    .action-card {
+        flex-direction: column;
+        gap: 16px;
+    }
+}

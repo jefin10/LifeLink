@@ -1,0 +1,80 @@
+.navbar {
+  
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+  height: 70px;
+  background-color: white;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+/* Left section */
+.left-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#logo {
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+}
+
+#logo img {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+}
+
+#name {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333333;
+}
+
+/* Center section */
+.center-nav {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.center-nav div {
+  font-size: 16px;
+  font-weight: 500;
+  color: #4a4a4a;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.center-nav div:hover {
+  color: #ff0000;
+}
+
+/* Right section */
+.right-nav {
+  display: flex;
+  align-items: center;
+}
+
+.login-btn {
+  background-color: #ff0000;
+  color: white;
+  padding: 8px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.login-btn:hover {
+  background-color: #cc0000;
+}

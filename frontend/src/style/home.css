@@ -1,0 +1,146 @@
+.home-container {
+    margin-top: 5%;
+    min-height: calc(100vh - 70px);
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 40px 20px;
+}
+
+.hero-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.main-title {
+    font-size: 3.5rem;
+    color: #2c3e50;
+    margin-bottom: 16px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.subtitle {
+    font-size: 1.5rem;
+    color: #6c757d;
+    margin-bottom: 48px;
+}
+
+.user-paths {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-bottom: 64px;
+    flex-wrap: wrap;
+}
+
+.path-card {
+    background: white;
+    padding: 32px;
+    border-radius: 16px;
+    width: 300px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.path-card:hover {
+    transform: translateY(-5px);
+}
+
+.icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    display: block;
+}
+
+.path-card h2 {
+    font-size: 1.5rem;
+    color: #2c3e50;
+    margin-bottom: 12px;
+}
+
+.path-card p {
+    color: #6c757d;
+    margin-bottom: 24px;
+    line-height: 1.6;
+}
+
+.path-button {
+    padding: 12px 24px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.path-button.hospital {
+    background-color: #cc0000;
+    color: white;
+}
+
+.path-button.doctor {
+    background-color: #cc0000;
+    color: white;
+}
+
+.path-button.patient {
+    background-color: #cc0000;
+    color: white;
+}
+
+.path-button:hover {
+    filter: brightness(110%);
+    transform: translateY(-2px);
+}
+
+.features-section {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    margin-top: 64px;
+    flex-wrap: wrap;
+}
+
+.feature {
+    text-align: center;
+    width: 250px;
+}
+
+.feature-icon {
+    font-size: 2rem;
+    margin-bottom: 16px;
+    display: block;
+}
+
+.feature h3 {
+    color: #2c3e50;
+    margin-bottom: 8px;
+    font-size: 1.25rem;
+}
+
+.feature p {
+    color: #6c757d;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .main-title {
+        font-size: 2.5rem;
+    }
+    
+    .subtitle {
+        font-size: 1.25rem;
+    }
+    
+    .user-paths {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .path-card {
+        width: 100%;
+        max-width: 300px;
+    }
+}
