@@ -1,3 +1,4 @@
+const Appointment = require("../models/Appointment");
 const Doctor = require("../models/Doctor");
 const Hospital = require("../models/Hospital");
 const bcrypt = require("bcryptjs");
@@ -27,7 +28,19 @@ const registerDoctor = async (req, res) => {
   }
 };
 
-// Fetch all hospitals
+const getAllDoctors = async (req,res) => {
+  try{
+    let {hospitalId} = req.body;
+    if (!hospitalId) {
+      return res.status(400).json({ message: "Hospital ID is required" });
+    }
+    
+    const doctors = await Doctor.find({ hospital: hospitalId });
+    res.json({doctors});
+  }catch(e){
+    console.log(e,"uff");
+  }
+}
 const getHospitals = async (req, res) => {
   try {
     const hospitals = await Hospital.find({}, "name _id");
@@ -38,6 +51,7 @@ const getHospitals = async (req, res) => {
 };
 
 const { v4: uuidv4 } = require('uuid'); 
+const Patient = require("../models/Patient");
 
 const loginDoctor = async (req, res) => {
   const { email, password } = req.body;
@@ -104,5 +118,69 @@ const authMiddleware = async (req, res, next) => {
     next();
 };
 
-module.exports = { loginDoctor, logoutDoctor, authMiddleware,registerDoctor, getHospitals };
+const getAppointments = async(req,res) => {
+  try {
+    const { session_token } = req.cookies;
+    if (!session_token) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
+    const doctor = await Doctor.findOne({ sessionToken: session_token });
+    const appointments = await Appointment.find({ doctor: doctor._id })
+            .populate("patient", "name age condition") 
+            .populate("hospital", "name location") 
+            .sort({ date: 1 });
+    
+    const formattedAppointments = appointments.map(apt => ({
+      _id: apt._id,
+      patientName: apt.patient.name,
+      department: apt.hospital.name, 
+      time: new Date(apt.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      date: apt.date,
+      status: apt.status,
+      age: apt.patient.age,
+      condition: apt.patient.condition
+    }));
+
+    res.json({ success: true, appointments: formattedAppointments });
+  } catch(e) {
+    console.error("Error fetching appointments:", e);
+    res.status(500).json({ message: "Error fetching appointments" });
+  }
+};
+
+const getPatientCount = async (req,res) => {
+  try{
+    const { session_token } = req.cookies;
+    if (!session_token) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
+    const doctor = await Doctor.findOne({ sessionToken: session_token });
+    const patientCount = await Patient.countDocuments({ doctorId: doctor._id });
+    console.log(patientCount);
+    res.json({ success: true, patientCount });
+  }
+  catch(e){
+    console.log("uff",e);
+  }
+}
+
+const getPendingAppointments = async (req,res) => {
+  try{
+    const { session_token } = req.cookies;
+    if (!session_token) {
+        return res.status(401).json({ message: "Unauthorized" });
+    }
+    const doctor = await Doctor.findOne({ sessionToken: session_token });
+    const pendingAppointmentCount = await Appointment.countDocuments({ 
+      doctor: doctor._id,  
+      status: "Pending"     
+  });    res.json({ success: true, pendingAppointmentCount });
+  }
+  catch(e){
+    console.log("uff",e);
+  }
+}
+
+
+module.exports = { loginDoctor,getAllDoctors,getAppointments,getPatientCount,getPendingAppointments, logoutDoctor, authMiddleware,registerDoctor, getHospitals };
 

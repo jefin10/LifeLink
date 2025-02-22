@@ -9,6 +9,9 @@ import HospitalRegister from './components/HospitalRegister';
 import DoctorRegister from './components/DoctorRegister';
 import HospitalDash from './pages/HospitalDash';
 import DoctorDash from './pages/DoctorDash';
+import HospitalPatients from './pages/HospitalPatients';
+import HospitalDoctors from './pages/HospitalDoctors';
+import Appointment from './pages/Appointment';
 
 const Layout = ({ children }) => {
   return (
@@ -62,9 +65,27 @@ function App() {
          <HospitalDash/>
        
      } />
+     <Route path="/hospitaldash/patients" element={
+         
+         <HospitalPatients/>
+       
+     } />
+     <Route path="/hospitaldash/doctors" element={
+         
+         <HospitalDoctors/>
+       
+     } />
+
      <Route path="/doctordash" element={
          
          <DoctorDash/>
+       
+     } />
+     <Route path="/appointment" element={
+         <Layout>
+            <Navbar/>
+         <Appointment/>
+         </Layout>
        
      } />
       </Routes>

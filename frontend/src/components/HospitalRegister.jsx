@@ -18,7 +18,7 @@ const HospitalRegister = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/api/hospitals/register", hospital);
+      const response = await axios.post("http://localhost:5000/api/hospital/register", hospital);
       setMessage(response.data.message);
     } catch (error) {
       setMessage(error.response?.data?.message || "Registration failed.");

@@ -20,6 +20,17 @@ header {
     border-bottom: 1px solid #f3e7e7;
     background-color: #fcf8f8;
 }
+.hospital-sidebar {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    width: 240px;
+    height: calc(100vh - 70px);
+    background-color: #fff;
+    border-right: 1px solid #ddd;
+    padding: 20px;
+    overflow-y: auto;
+}
 
 .logo-container {
     display: flex;
@@ -74,7 +85,9 @@ header {
 /* Main layout */
 .main-container {
     display: flex;
-    padding: 20px 24px;
+    margin-left: 240px;
+    margin-top: 70px;
+    padding: 20px;
     gap: 4px;
 }
 

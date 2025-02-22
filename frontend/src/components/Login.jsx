@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import axios from "axios";
 import "../style/Login.css";
 import i2 from "../Images/3.png";
@@ -9,6 +9,23 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("doctor");
   const navigate = useNavigate();
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/auth/check-cookies", { withCredentials: true });
+        
+        if (response.data.role === "doctor") {
+          navigate("/doctordash");
+        } else if (response.data.role === "hospital") {
+          navigate("/hospitaldash");
+        }
+      } catch (error) {
+        console.log("No active session found");
+      }
+    };
+
+    checkSession();
+  }, [navigate]);
 
   const handleLogin = async () => {
     console.log("Email:", email);

@@ -3,7 +3,7 @@ import logo from "../Images/logo.png";
 import { LogOut } from 'lucide-react';
 import {useNavigate} from 'react-router-dom'
 import axios from 'axios';
-const DoctorNav = () => {
+const HospitalNavbar = () => {
   const navigate = useNavigate();
   const handleLogout=  async () => {
     try {
@@ -37,4 +37,4 @@ const DoctorNav = () => {
   );
 };
 
-export default DoctorNav;
+export default HospitalNavbar;

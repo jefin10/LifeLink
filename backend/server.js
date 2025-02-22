@@ -20,8 +20,10 @@ app.use(cookieParser()); // Add this to parse cookies
 connectDB();
 
 // Routes
-app.use('/api/hospitals', require('./routes/hospitalRoutes'));
+app.use('/api/hospital', require('./routes/hospitalRoutes'));
 app.use('/api/doctors', require('./routes/doctorRoutes'));
+app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/appointments', require('./routes/appointmentRoutes'));
 app.get("/", (req, res) => {
     res.send("Hospital Management System API is running...");
 });
