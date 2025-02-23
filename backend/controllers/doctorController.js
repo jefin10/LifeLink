@@ -163,6 +163,19 @@ const getPatientCount = async (req,res) => {
     console.log("uff",e);
   }
 }
+const getPatients  = async (req,res) => {
+  try{
+    const {session_token} = req.cookies;
+    if(!session_token){
+      req.status(401).json({message: "Unauth"});
+    }
+    const doctor = await Doctor.findOne({ sessionToken: session_token });
+    const patients = await Patient.find({ doctorId: doctor._id });
+    res.json({ success: true, patients });
+  }catch(e){
+    console.log("bru h", e);
+  }
+};
 
 const getPendingAppointments = async (req,res) => {
   try{
@@ -180,7 +193,51 @@ const getPendingAppointments = async (req,res) => {
     console.log("uff",e);
   }
 }
+const confirmAppointments = async (req, res) => {
+  try {
+    const { appointmentId } = req.body;
+
+    if (!appointmentId) {
+      return res.status(400).json({ success: false, message: "Appointment ID is required" });
+    }
+
+    const updatedAppointment = await Appointment.findByIdAndUpdate(
+      appointmentId,
+      { status: "confirmed" },
+      { new: true } 
+    );
+
+    if (!updatedAppointment) {
+      return res.status(404).json({ success: false, message: "Appointment not found" });
+    }
+
+    res.json({ success: true, message: "Appointment confirmed", appointment: updatedAppointment });
+  } catch (e) {
+    console.error("Error confirming appointment:", e);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+const removeAppointment = async (req, res) => {
+  try {
+    const { appointmentId } = req.body;
+
+    if (!appointmentId) {
+      return res.status(400).json({ success: false, message: "Appointment ID is required" });
+    }
+
+    const deletedAppointment = await Appointment.findByIdAndDelete(appointmentId);
+
+    if (!deletedAppointment) {
+      return res.status(404).json({ success: false, message: "Appointment not found" });
+    }
+
+    res.json({ success: true, message: "Appointment removed successfully" });
+  } catch (error) {
+    console.error("Error removing appointment:", error);
+    res.status(500).json({ success: false, message: "Error removing appointment" });
+  }
+};
 
 
-module.exports = { loginDoctor,getAllDoctors,getAppointments,getPatientCount,getPendingAppointments, logoutDoctor, authMiddleware,registerDoctor, getHospitals };
+module.exports = { confirmAppointments,removeAppointment,getPatients,loginDoctor,getAllDoctors,getAppointments,getPatientCount,getPendingAppointments, logoutDoctor, authMiddleware,registerDoctor, getHospitals };
 

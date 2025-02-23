@@ -12,7 +12,8 @@ import DoctorDash from './pages/DoctorDash';
 import HospitalPatients from './pages/HospitalPatients';
 import HospitalDoctors from './pages/HospitalDoctors';
 import Appointment from './pages/Appointment';
-
+import DoctorPatients from './pages/DoctorPatients';
+import DoctorAppointments from './pages/DoctorAppointments';
 const Layout = ({ children }) => {
   return (
     <>
@@ -79,6 +80,16 @@ function App() {
      <Route path="/doctordash" element={
          
          <DoctorDash/>
+       
+     } />
+     <Route path="/doctordash/patients" element={
+         
+         <DoctorPatients/>
+       
+     } />
+     <Route path="/doctordash/appointments" element={
+         
+         <DoctorAppointments />
        
      } />
      <Route path="/appointment" element={
