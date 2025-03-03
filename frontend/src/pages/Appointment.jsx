@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "../style/Login.css";
+import "../style/appointment.css";
 import i2 from "../Images/3.png";
 import { useNavigate } from "react-router-dom";
 
@@ -91,7 +91,7 @@ const Appointment = () => {
       </div>
 
       <div className="right-section">
-        <div className="login-box">
+        <div className="login-boxx">
           <h1>Appointment Form</h1>
 
           <label>Select Date:</label>

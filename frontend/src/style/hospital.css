@@ -132,9 +132,13 @@ header {
 
 .active {
     background-color: #f3e7e7;
-    width:4px;
     border-radius: 999px;
 }
+.activee {
+    background-color: #f3e7e7;
+    border-radius: 999px;
+}
+
 
 /* Main content */
 .main-content {
@@ -272,4 +276,26 @@ td:first-child {
         flex-direction: column;
         gap: 16px;
     }
+}
+.btn {
+    padding: 8px 12px;
+    margin: 0 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 4px;
+}
+
+.btn.cancel {
+    background-color: #f44336;
+    color: white;
+}
+
+.btn.complete {
+    background-color: #4caf50;
+    color: white;
+}
+
+.addp-input{
+    border: #1b0e0e 1px ;
 }

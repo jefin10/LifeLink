@@ -4,10 +4,11 @@ import logo from "../Images/logo.png";
 import "../style/hospital.css";
 import HospitalNavbar from '../modules/HospitalNavbar';
 import HospitalSidebar from '../modules/HospitalSidebar';
+import { useNavigate } from 'react-router-dom';
 
 const HospitalDash = () => {
     const [hospitalData, setHospitalData] = useState(null);
-
+    const navigate = useNavigate();
     useEffect(() => {
         const fetchHospitalData = async () => {
             try {
@@ -22,7 +23,24 @@ const HospitalDash = () => {
 
         fetchHospitalData();
     }, []);
-
+    useEffect(() => {
+        const checkSession = async () => {
+          try {
+            const response = await axios.get("http://localhost:5000/api/auth/check-cookies", { withCredentials: true });
+            
+           if (response.data.role === "hospital") {
+              navigate("/hospitaldash");
+            }else{
+                navigate("/login")
+            }
+          } catch (error) {
+            
+            navigate('/login')
+          }
+        };
+    
+        checkSession();
+      }, []);
     return (
         <>
             <HospitalNavbar />

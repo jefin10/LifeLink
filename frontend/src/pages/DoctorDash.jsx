@@ -7,6 +7,7 @@ import "../style/calender-styles.css";
 import DoctorNav from "../modules/DoctorNav";
 import DoctorSide from "../modules/DoctorSide";
 import "../style/scrollbar.css";
+import { useNavigate } from "react-router-dom";
 
 const DoctorDash = () => {
   const [date, setDate] = useState(new Date());
@@ -14,7 +15,7 @@ const DoctorDash = () => {
   const [filteredAppointments, setFilteredAppointments] = useState([]);
   const [totalPatients, setTotalPatients] = useState(0);
   const [pendingAppointments, setPendingAppointments] = useState(0);
-
+  const navigate= useNavigate();
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
@@ -70,7 +71,22 @@ const DoctorDash = () => {
 
     filterAppointmentsByDate();
   }, [date, allAppointments]);
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/auth/check-cookies", { withCredentials: true });
+        
+       if (response.data.role === "doctor") {
+          navigate("/doctordash");
+        }
+      } catch (error) {
+        
+        navigate('/login')
+      }
+    };
 
+    checkSession();
+  }, []);
   return (
     <div className="doctor-dash-container">
       <DoctorNav />

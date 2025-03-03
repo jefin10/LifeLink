@@ -36,7 +36,6 @@ const handleBook = async (req, res) => {
                 await patient.save();
             }
         } else {
-            // Create new patient
             patient = await Patient.create({
                 name,
                 age,
@@ -46,7 +45,6 @@ const handleBook = async (req, res) => {
             });
         }
 
-        // Create new appointment
         const appointment = await Appointment.create({
             patient: patient._id,
             doctor: doctorId,

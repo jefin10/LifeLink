@@ -1,7 +1,9 @@
 import React from 'react';
 import "../style/home.css";
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
+  const navigate = useNavigate();
   return (
     <div className="home-container">
       <div className="hero-section">
@@ -14,21 +16,21 @@ const Home = () => {
             <span className="icon">🏥</span>
             <h2>Hospitals</h2>
             <p>Streamline operations and manage appointments efficiently</p>
-            <button className="path-button hospital">Hospital Portal</button>
+            <button className="path-button hospital" onClick={() => navigate("/hospitaldash")}>Hospital Portal</button>
           </div>
 
           <div className="path-card">
             <span className="icon">👨‍⚕️</span>
             <h2>Doctors</h2>
             <p>Manage your schedule and connect with patients easily</p>
-            <button className="path-button doctor">Doctor Login</button>
+            <button className="path-button doctor" onClick={() => navigate("/doctordash")}>Doctor Login</button>
           </div>
 
           <div className="path-card">
             <span className="icon">👥</span>
             <h2>Patients</h2>
             <p>Book appointments and access healthcare services</p>
-            <button className="path-button patient">Book Appointment</button>
+            <button className="path-button patient" onClick={() => navigate("/appointment")}>Book Appointment</button>
           </div>
         </div>
 

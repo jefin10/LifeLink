@@ -24,11 +24,7 @@ const Navbar = () => {
         <div id="name">LifeLink</div>
       </div>
       
-      <div className="center-nav">
-        <div>Hospitals</div>
-        <div>Doctors</div>
-        <div onClick={handleAboutClick}>About</div>
-      </div>
+      
       
       <div className="right-nav">
         <div onClick={handleLoginClick} className="login-btn">

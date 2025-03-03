@@ -1,16 +1,22 @@
-const jwt = require('jsonwebtoken');
+const Hospital = require('../models/Hospital');
+const Doctor = require('../models/Doctor');
+const Patient = require('../models/Patient');
 
-const authMiddleware = (req, res, next) => {
-    const token = req.header("Authorization");
-    if (!token) return res.status(401).json({ message: "No token, authorization denied" });
-
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded;
-        next();
-    } catch (err) {
-        res.status(401).json({ message: "Invalid token" });
-    }
-};
-
-module.exports = authMiddleware;
+const validateUser = async (req,res) => {
+    const {session_token} = req.cookies;
+    if (!session_token) {
+            return res.status(401).json({ message: "No session found" });
+          }
+      
+          const doctor = await Doctor.findOne({ sessionToken: session_token });
+    if (doctor) {
+            return res.json({ role: "doctor" });
+          }
+      
+          const hospital = await Hospital.findOne({ sessionToken: session_token });
+     if (hospital) {
+            return res.json({ role: "hospital" });
+        }
+        return res.status(401).json({ message: "No session found" });
+}
+module.exports = validateUser;

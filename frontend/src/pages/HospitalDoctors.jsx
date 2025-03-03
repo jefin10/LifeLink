@@ -58,7 +58,7 @@ const HospitalDoctors = () => {
                                     <tr>
                                         <th>ID</th>
                                         <th>Name</th>
-                                        <th>Specialization</th>
+                                        <th>Email</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -66,7 +66,7 @@ const HospitalDoctors = () => {
                                         <tr key={index}>
                                             <td>{doctor._id}</td>
                                             <td>{doctor.name}</td>
-                                            <td>{doctor.specialization}</td>
+                                            <td>{doctor.email}</td>
                                         </tr>
                                     ))}
                                 </tbody>

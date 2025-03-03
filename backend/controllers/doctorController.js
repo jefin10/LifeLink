@@ -6,14 +6,11 @@ const bcrypt = require("bcryptjs");
 const registerDoctor = async (req, res) => {
   try {
     const { name, email, password, hospitalId } = req.body;
-
-    // Check if hospital exists
     const hospital = await Hospital.findById(hospitalId);
     if (!hospital) {
       return res.status(400).json({ message: "Hospital not found" });
     }
 
-    // Check if doctor already exists
     const existingDoctor = await Doctor.findOne({ email });
     if (existingDoctor) {
       return res.status(400).json({ message: "Doctor already registered" });
@@ -22,9 +19,9 @@ const registerDoctor = async (req, res) => {
     const newDoctor = new Doctor({ name, email, password: password, hospital: hospitalId });
 
     await newDoctor.save();
-    res.status(201).json({ message: "Doctor registered successfully!" });
+    res.status(201).json({ success: true, message: "Doctor registered successfully!" });
   } catch (error) {
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({ success: false, message: "Server Error" });
   }
 };
 

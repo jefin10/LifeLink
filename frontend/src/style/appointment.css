@@ -1,0 +1,165 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .container {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+  }
+  
+  .left-section {
+    flex: 1;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+  }
+  
+  .left-text {
+    max-width: 400px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+  }
+  
+  .left-small-title {
+    font-size:20px;
+    text-transform: uppercase;
+    color: #777;
+    text-align: center;
+
+  }
+  
+  .left-big-title {
+    font-size: 36px;
+    font-weight: bold;
+    line-height: 1.2;
+    text-transform: uppercase;
+    margin: 20px 0;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+  }
+  
+  .left-login {
+    margin-top: 20px;
+    font-size: 14px;
+  }
+  
+  .left-login-botton {
+    display: inline-block;
+    color: #000;
+    font-weight: bold;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  
+  .left-image {
+    margin-top: 30px;
+  }
+  
+  .left-image img {
+    width: 100%;
+    border-radius: 10px;
+  }
+  
+  .right-section {
+    flex: 1;
+    position: relative;
+    background: rgba(255, 255, 255, 0.9) no-repeat center center/cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .login-boxx {
+    width: 80%;
+    height: 60%;
+    text-align: center;
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: column;
+
+  }
+  
+  .login-boxx h1 {
+    font-size: xx-large;
+  }
+  
+  .login-boxx input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  .login-boxx select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  .login-boxx  button {
+    width: 100%;
+    padding: 10px;
+    background-color: #ff0000;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .login-boxx  button:hover {
+    background-color: #333;
+  }
+.role-selector {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.role-selector p {
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.role-options {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 10px;
+}
+.role-option input{
+  accent-color: #ff0000;
+}
+.role-option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  transition: all 0.2s ease;
+}
+
+.role-option.selected {
+  background-color: #f0f0f0;
+  border-color: #999;
+}
+
+.role-option input {
+  margin-right: 8px;
+  width: auto;
+  cursor: pointer;
+}

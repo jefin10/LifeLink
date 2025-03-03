@@ -26,7 +26,6 @@ const HospitalPatients = () => {
                 });
                 setHospitalId(response.data.hospitalId);
     
-                // ✅ Instead of resetting newPatient, only update hospitalId
                 setNewPatient(prev => ({ ...prev, hospitalId: response.data.hospitalId }));
             } catch (error) {
                 console.error("Error fetching hospital ID:", error);
@@ -104,19 +103,20 @@ const HospitalPatients = () => {
                     <div className="dashboard-header">
                         <h1 className="dashboard-title">Patients</h1>
                         <p className="dashboard-subtitle">List of all patients in the hospital</p>
-                        <button className="add-patient-btn" onClick={() => setShowForm(!showForm)}>
+                        <button className="add-patient-btn btn cancel" onClick={() => setShowForm(!showForm)}>
                             {showForm ? "Close Form" : "Add Patient"}
                         </button>
                     </div>
 
                     {showForm && (
-                        <form className="patient-form" onSubmit={handleAddPatient}>
+                        <form className="patient-form " onSubmit={handleAddPatient}>
                             <input
                                 type="text"
                                 name="name"
                                 placeholder="Patient Name"
                                 value={newPatient.name}
                                 onChange={handleChange}
+                                className="addp-imput"
                                 required
                             />
                             <input
@@ -143,7 +143,7 @@ const HospitalPatients = () => {
                                     </option>
                                 ))}
                             </select>
-                            <button type="submit" className="submit-btn">Add Patient</button>
+                            <button type="submit" className="btn cancel">Add Patient</button>
                         </form>
                     )}
 

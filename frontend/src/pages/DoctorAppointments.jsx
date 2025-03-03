@@ -33,7 +33,7 @@ const DoctorAppointments = () => {
           );
       setAppointments((prev) =>
         prev.map((apt) =>
-          apt._id === id ? { ...apt, status: "Confirmed" } : apt
+          apt._id===id ? { ...apt, status: "Confirmed" } : apt
         )
       );
     } catch (error) {
@@ -77,7 +77,7 @@ const DoctorAppointments = () => {
                   <tr>
                     <th>ID</th>
                     <th>Patient</th>
-                    <th>Department</th>
+                    <th>Condition</th>
                     <th>Time</th>
                     <th>Status</th>
                     <th>Actions</th>
@@ -88,16 +88,16 @@ const DoctorAppointments = () => {
                     <tr key={apt._id}>
                       <td>{apt._id}</td>
                       <td>{apt.patientName}</td>
-                      <td>{apt.department}</td>
+                      <td>{apt.condition}</td>
                       <td>{apt.time}</td>
                       <td>{apt.status}</td>
                       <td>
-                        {apt.status !== "Confirmed" && (
-                          <button onClick={() => confirmAppointment(apt._id)}>
+                        {apt.status !== "confirmed" && (
+                          <button onClick={() => confirmAppointment(apt._id)} className="btn complete">
                             Confirm
                           </button>
                         )}
-                        <button onClick={() => removeAppointment(apt._id)}>
+                        <button onClick={() => removeAppointment(apt._id)} className="btn cancel">
                           Remove
                         </button>
                       </td>
