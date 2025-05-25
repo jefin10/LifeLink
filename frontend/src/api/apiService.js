@@ -1,29 +1,49 @@
 import axios from 'axios'
 
-const API_BASE_URL = "/"; 
+// Use environment variable or fallback to relative URL for production
+const API_BASE_URL = import.meta.env.VITE_API_URL || "/"; 
 
-export const API_URL = "/"; // Replace with your actual API URL
+export const API_URL = API_BASE_URL;
+
 const api = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 5000, 
-  headers:{
-    "Content-Type":"application/json",
+  timeout: 10000, 
+  withCredentials: true,
+  headers: {
+    "Content-Type": "application/json",
   },
 });
 
-
-export const registerUser = async (role, gmail, password) => {
-  if (role == "h"){
-    return api.post("/api/hospitals/register", { role, gmail, password });
+// Add request interceptor for debugging
+api.interceptors.request.use(
+  (config) => {
+    console.log(`Making ${config.method?.toUpperCase()} request to: ${config.url}`);
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
-    
-  };
+);
 
-  export const loginUser = async (role, gmail, password) => {
-    if (role == "h"){
-      return api.post("/api/hospitals/login", {gmail, password });
-    }
-    if(role=="d"){
-      return api.post("/api/doctors/login", {gmail, password })
-    }  
-    };
+// Add response interceptor for error handling
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    console.error('API Error:', error.response?.data || error.message);
+    return Promise.reject(error);
+  }
+);
+
+// Export api as default
+export default api;
+
+// Specific API functions
+export const registerUser = async (role, email, password, additionalData = {}) => {
+  const endpoint = role === "hospital" ? "/api/hospital/register" : "/api/doctors/register";
+  return api.post(endpoint, { email, password, ...additionalData });
+};
+
+export const loginUser = async (role, email, password) => {
+  const endpoint = role === "hospital" ? "/api/hospital/login" : "/api/doctors/login";
+  return api.post(endpoint, { email, password, role });
+};
