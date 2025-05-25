@@ -1,7 +1,8 @@
 import axios from 'axios'
 
-const API_BASE_URL = "http://localhost:5000/"; 
+const API_BASE_URL = "/"; 
 
+export const API_URL = "/"; // Replace with your actual API URL
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 5000, 
@@ -9,6 +10,7 @@ const api = axios.create({
     "Content-Type":"application/json",
   },
 });
+
 
 export const registerUser = async (role, gmail, password) => {
   if (role == "h"){

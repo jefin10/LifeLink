@@ -4,6 +4,7 @@ import "../style/hospital.css";
 
 import DoctorNav from "../modules/DoctorNav";
 import DoctorSide from "../modules/DoctorSide";
+import { API_URL } from "../api/apiService";
 
 
 const DoctorPatients = () => {
@@ -14,7 +15,7 @@ const DoctorPatients = () => {
     useEffect(() => {
         const fetchPatients = async () => {
             try {
-                const response = await axios.get("http://localhost:5000/api/doctors/patients", {
+                const response = await axios.get(`${API_URL}/api/doctors/patients`, {
                     withCredentials: true,
                 });
                 setPatients(response.data.patients || []);
@@ -33,8 +34,10 @@ const DoctorPatients = () => {
    
 
     return (
-        <>
-            <DoctorNav />
+        <>  <div className="navbar-container">
+                        <DoctorNav />
+
+        </div>
             <div className="main-container">
                 <div className="hospital-sidebar">
                     <DoctorSide/>

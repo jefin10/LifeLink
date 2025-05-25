@@ -3,6 +3,7 @@ import axios from "axios";
 import "../style/hospital.css";
 import HospitalNavbar from "../modules/HospitalNavbar";
 import HospitalSidebar from "../modules/HospitalSidebar";
+import { API_URL } from "../api/apiService";
 
 const HospitalDoctors = () => {
     const [doctors, setDoctors] = useState([]);
@@ -11,7 +12,7 @@ const HospitalDoctors = () => {
     useEffect(() => {
         const fetchHospitalId = async () => {
             try {
-                const response = await axios.get("http://localhost:5000/api/hospital/me", {
+                const response = await axios.get(`${API_URL}/api/hospital/me`, {
                     withCredentials: true,
                 });
                 setHospitalId(response.data.hospitalId);
@@ -26,7 +27,7 @@ const HospitalDoctors = () => {
     useEffect(() => {
         const fetchDoctors = async () => {
             try {
-                const response = await axios.get("http://localhost:5000/api/hospital/doctors", {
+                const response = await axios.get(`${API_URL}/api/hospital/doctors`, {
                     withCredentials: true,
                 });
                 setDoctors(response.data.doctors || []);

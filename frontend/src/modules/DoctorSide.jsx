@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import "../style/hospital.css"; // Ensure this file contains your sidebar CSS
+import "../style/sidebar.css"; // Ensure this file contains your sidebar CSS
 
 const DoctorSide = () => {
   const navigate = useNavigate();

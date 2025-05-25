@@ -3,6 +3,7 @@ import axios from "axios";
 import "../style/appointment.css";
 import i2 from "../Images/3.png";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../api/apiService";
 
 const Appointment = () => {
   const [date, setDate] = useState("");
@@ -19,7 +20,7 @@ const Appointment = () => {
   useEffect(() => {
     const fetchHospitals = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/hospital/getall");
+        const response = await axios.get(`${API_URL}/api/hospital/getall`);
         setHospitals(response.data.hospitals);
       } catch (error) {
         console.error("Error fetching hospitals:", error);
@@ -38,7 +39,7 @@ const Appointment = () => {
         }
         
         const response = await axios.post(
-          "http://localhost:5000/api/doctors/getall",
+          `${API_URL}/api/doctors/getall`,
           { hospitalId: selectedHospital },
           { headers: { "Content-Type": "application/json" } }
         );
@@ -66,7 +67,7 @@ const Appointment = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/appointments/book",
+        `${API_URL}/api/appointments/book`,
         { date, time, doctorId: selectedDoctor, hospitalId: selectedHospital, name, age, condition },
         { withCredentials: true }
       );
@@ -77,7 +78,6 @@ const Appointment = () => {
       console.error("Error booking appointment:", error.response?.data || error.message);
     }
   };
-
   return (
     <div className="container">
       <div className="left-section">

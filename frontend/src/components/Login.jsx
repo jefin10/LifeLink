@@ -5,8 +5,8 @@ import i2 from "../Images/3.png";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("jefin@gmail.com");
+  const [password, setPassword] = useState("jefin2123");
   const [role, setRole] = useState("doctor");
   const navigate = useNavigate();
   useEffect(() => {
@@ -73,7 +73,7 @@ const Login = () => {
           </div>
           <div className="left-login">
             Already have an account?{" "}
-            <div className="left-login-botton">Login</div>
+            <div className="left-login-botton" onClick={() => navigate('/regd')}>Login</div>
           </div>
         </div>
         <div className="left-image">

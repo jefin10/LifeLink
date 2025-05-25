@@ -8,6 +8,7 @@ import DoctorNav from "../modules/DoctorNav";
 import DoctorSide from "../modules/DoctorSide";
 import "../style/scrollbar.css";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../api/apiService";
 
 const DoctorDash = () => {
   const [date, setDate] = useState(new Date());
@@ -19,7 +20,7 @@ const DoctorDash = () => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/doctors/appointments", {
+        const response = await axios.get(`${API_URL}/api/doctors/appointments`, {
           withCredentials: true,
         });
         setAllAppointments(response.data.appointments);
@@ -30,7 +31,7 @@ const DoctorDash = () => {
 
     const fetchTotalPatients = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/doctors/patients/count", {
+        const response = await axios.get(`${API_URL}/api/doctors/patients/count`, {
           withCredentials: true,
         });
         setTotalPatients(response.data.patientCount);
@@ -41,7 +42,7 @@ const DoctorDash = () => {
 
     const fetchPendingAppointments = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/doctors/appointments/pending", {
+        const response = await axios.get(`${API_URL}/api/doctors/appointments/pending`, {
           withCredentials: true,
         });
         setPendingAppointments(response.data.pendingAppointmentCount);
@@ -74,7 +75,7 @@ const DoctorDash = () => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/auth/check-cookies", { withCredentials: true });
+        const response = await axios.get(`${API_URL}/api/auth/check-cookies`, { withCredentials: true });
         
        if (response.data.role === "doctor") {
           navigate("/doctordash");
@@ -89,42 +90,45 @@ const DoctorDash = () => {
   }, []);
   return (
     <div className="doctor-dash-container">
+      <div className="navbar-container">
       <DoctorNav />
-      <div className="doctor-dash-body">
-        <div className="doctor-sidebar">
-          <DoctorSide />
-        </div>
-        <main className="doctor-main">
-          <div className="stats-grid">
-            <div className="stat-card">
-              <div className="stat-icon-container stat-icon-red">
-                <CalendarDays className="stat-icon" />
-              </div>
-              <div className="stat-text">
-                <p className="stat-label">Today's Appointments</p>
-                <p className="stat-value">{filteredAppointments.length}</p>
-              </div>
+    </div>
+    <div className="doctor-dash-body">
+      <div className="doctor-sidebar">
+        <DoctorSide />
+      </div>
+      <main className="doctor-main">
+        <div className="stats-grid">
+          <div className="stat-card">
+            <div className="stat-icon-container stat-icon-red">
+              <CalendarDays className="stat-icon" />
             </div>
-            <div className="stat-card">
-              <div className="stat-icon-container stat-icon-blue">
-                <Users className="stat-icon" />
-              </div>
-              <div className="stat-text">
-                <p className="stat-label">Total Patients</p>
-                <p className="stat-value">{totalPatients}</p>
-              </div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-icon-container stat-icon-yellow">
-                <Clock className="stat-icon" />
-              </div>
-              <div className="stat-text">
-                <p className="stat-label">Pending Appointments</p>
-                <p className="stat-value">{pendingAppointments}</p>
-              </div>
+            <div className="stat-text">
+              <p className="stat-label">Today's Appointments</p>
+              <p className="stat-value">{filteredAppointments.length}</p>
             </div>
           </div>
-          <div className="calendar-appointments-grid">
+          <div className="stat-card">
+            <div className="stat-icon-container stat-icon-blue">
+              <Users className="stat-icon" />
+            </div>
+            <div className="stat-text">
+              <p className="stat-label">Total Patients</p>
+              <p className="stat-value">{totalPatients}</p>
+            </div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-icon-container stat-icon-yellow">
+              <Clock className="stat-icon" />
+            </div>
+            <div className="stat-text">
+              <p className="stat-label">Pending Appointments</p>
+              <p className="stat-value">{pendingAppointments}</p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="calendar-appointments-grid">
             <section className="calendar-card">
               <h2 className="section-title">Calendar</h2>
               <Calendar onChange={setDate} value={date} className="react-calendar" />
@@ -161,9 +165,9 @@ const DoctorDash = () => {
               )}
             </section>
           </div>
-        </main>
-      </div>
+      </main>
     </div>
+  </div>
   );
 };
 

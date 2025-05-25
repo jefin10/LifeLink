@@ -4,6 +4,7 @@ import "../style/doctor-dash.css";
 import DoctorNav from "../modules/DoctorNav";
 import DoctorSide from "../modules/DoctorSide";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../api/apiService";
 
 const DoctorAppointments = () => {
   const [appointments, setAppointments] = useState([]);
@@ -11,7 +12,7 @@ const DoctorAppointments = () => {
 
   const fetchAppointments = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/doctors/appointments", {
+      const response = await axios.get(`${API_URL}/api/doctors/appointments`, {
         withCredentials: true,
       });
       setAppointments(response.data.appointments || []);
@@ -27,7 +28,7 @@ const DoctorAppointments = () => {
   const confirmAppointment = async (id) => {
     try {
         const response = await axios.post(
-            "http://localhost:5000/api/doctors/appointment/confirm",
+            `${API_URL}/api/doctors/appointment/confirm`,
             { appointmentId: id },
             { withCredentials: true }
           );
@@ -44,7 +45,7 @@ const DoctorAppointments = () => {
   const removeAppointment = async (id) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/doctors/appointment/remove",
+        `${API_URL}/api/doctors/appointment/remove`,
         { appointmentId: id },
         { withCredentials: true }
       );
@@ -56,11 +57,13 @@ const DoctorAppointments = () => {
       console.error("Error removing appointment:", error.response?.data || error.message);
     }
   };
-  
 
   return (
     <div className="doctor-dash-container">
-      <DoctorNav />
+      <div className="navbar-container">
+                        <DoctorNav />
+
+        </div>
       <div className="doctor-dash-body">
         <div className="doctor-sidebar">
           <DoctorSide />
@@ -75,7 +78,6 @@ const DoctorAppointments = () => {
               <table className="patients-table">
                 <thead>
                   <tr>
-                    <th>ID</th>
                     <th>Patient</th>
                     <th>Condition</th>
                     <th>Time</th>
@@ -86,7 +88,6 @@ const DoctorAppointments = () => {
                 <tbody>
                   {appointments.map((apt) => (
                     <tr key={apt._id}>
-                      <td>{apt._id}</td>
                       <td>{apt.patientName}</td>
                       <td>{apt.condition}</td>
                       <td>{apt.time}</td>
