@@ -20,7 +20,7 @@ app.use(cookieParser());
 connectDB();
 
 // Routes
-app.use('/api/hospital', require('./routes/hospitalRoutes'));
+app.use('/api/hospital', require('./routes/hospitalroutes'));
 app.use('/api/doctors', require('./routes/doctorRoutes'));
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/appointments', require('./routes/appointmentRoutes'));
