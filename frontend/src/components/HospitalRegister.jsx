@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import axios from "axios";
-import { registerUser } from "../api/apiService";
+import api from "../api/apiService";
+
 const HospitalRegister = () => {
   const [hospital, setHospital] = useState({
     name: "",
@@ -18,7 +18,7 @@ const HospitalRegister = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/api/hospital/register", hospital);
+      const response = await api.post("/api/hospital/register", hospital);
       setMessage(response.data.message);
     } catch (error) {
       setMessage(error.response?.data?.message || "Registration failed.");

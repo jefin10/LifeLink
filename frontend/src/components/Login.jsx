@@ -1,18 +1,19 @@
-import React, { useState,useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
 import "../style/Login.css";
 import i2 from "../Images/3.png";
 import { useNavigate } from "react-router-dom";
+import api, { loginUser } from "../api/apiService";
 
 const Login = () => {
   const [email, setEmail] = useState("jefin@gmail.com");
   const [password, setPassword] = useState("jefin2123");
   const [role, setRole] = useState("doctor");
   const navigate = useNavigate();
+
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const response = await axios.get("/api/auth/check-cookies", { withCredentials: true });
+        const response = await api.get("/api/auth/check-cookies");
         
         if (response.data.role === "doctor") {
           navigate("/doctordash");
@@ -28,27 +29,12 @@ const Login = () => {
   }, [navigate]);
 
   const handleLogin = async () => {
-    console.log("Email:", email);
-    console.log("Password:", password);
-    console.log("Role:", role);
     try {
-      let response;
-      if(role == "doctor"){
-        response = await axios.post(
-          "/api/doctors/login",
-          { email, password, role },
-          { withCredentials: true }
-        );
-      }else{
-        response = await axios.post(
-          "/api/hospital/login",
-          { email, password, role },
-          { withCredentials: true }
-        );
-      }
+      const response = await loginUser(role, email, password);
       
       console.log("Response:", response.data);
-      alert(response.data.message, response.data.role);
+      alert(response.data.message);
+      
       if (response.data.role === "doctor") {
         navigate("/doctordash");
       } else if (response.data.role === "hospital") {
@@ -57,10 +43,8 @@ const Login = () => {
         navigate("/");
       }
     } catch (error) {
-      console.error(
-        "Login Error:",
-        error.response ? error.response.data : error.message
-      );
+      console.error("Login Error:", error.response?.data || error.message);
+      alert("Login failed: " + (error.response?.data?.message || error.message));
     }
   };
 
