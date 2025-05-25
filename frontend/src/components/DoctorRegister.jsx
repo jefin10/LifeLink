@@ -22,7 +22,7 @@ const DoctorRegister = () => {
   useEffect(() => {
     const fetchHospitals = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/doctors/hospitals");
+        const response = await axios.get("/api/doctors/hospitals");
         setHospitals(response.data);
       } catch (error) {
         console.error("Error fetching hospitals", error);
@@ -38,7 +38,7 @@ const DoctorRegister = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/api/doctors/register", doctor);
+      const response = await axios.post("/api/doctors/register", doctor);
       setMessage(response.data.message);
       if (response.data.success){
         navigate('/login')

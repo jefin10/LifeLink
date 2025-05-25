@@ -12,7 +12,7 @@ const Login = () => {
   useEffect(() => {
     const checkSession = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/auth/check-cookies", { withCredentials: true });
+        const response = await axios.get("/api/auth/check-cookies", { withCredentials: true });
         
         if (response.data.role === "doctor") {
           navigate("/doctordash");
@@ -35,13 +35,13 @@ const Login = () => {
       let response;
       if(role == "doctor"){
         response = await axios.post(
-          "http://localhost:5000/api/doctors/login",
+          "/api/doctors/login",
           { email, password, role },
           { withCredentials: true }
         );
       }else{
         response = await axios.post(
-          "http://localhost:5000/api/hospital/login",
+          "/api/hospital/login",
           { email, password, role },
           { withCredentials: true }
         );
