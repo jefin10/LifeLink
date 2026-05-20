@@ -3,19 +3,28 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const cookieParser = require('cookie-parser');
 require("dotenv").config();
-const path = require('path'); // Add this
+const path = require('path');
 
 const app = express();
 
 // Middleware
+const allowedOrigins = (process.env.CORS_ORIGINS || "http://localhost:5173,http://localhost:3000,http://localhost:5174")
+    .split(",")
+    .map(o => o.trim())
+    .filter(Boolean);
+
 const corsOptions = {
-    origin: ["http://localhost:5173", "http://localhost:3000" , 'http://localhost:5174','*'],
+    origin: (origin, callback) => {
+        // allow same-origin / curl / SSR (no origin) and any whitelisted origin
+        if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+        return callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
 };
 
 app.use(cors(corsOptions));
 app.use(express.json());
-app.use(cookieParser()); 
+app.use(cookieParser());
 
 connectDB();
 
