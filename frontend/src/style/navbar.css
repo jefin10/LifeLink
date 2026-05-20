@@ -1,5 +1,4 @@
 .navbar {
-  
   position: fixed;
   top: 0;
   left: 0;
@@ -8,22 +7,24 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 24px;
-  height: 70px;
-  background-color: white;
-  border-bottom: 1px solid #e5e5e5;
+  padding: 0 32px;
+  height: 64px;
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid #ececef;
 }
 
-/* Left section */
 .left-nav {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  cursor: pointer;
 }
 
 #logo {
-  height: 40px;
-  width: 40px;
+  height: 32px;
+  width: 32px;
   display: flex;
   align-items: center;
 }
@@ -35,46 +36,51 @@
 }
 
 #name {
-  font-size: 24px;
-  font-weight: bold;
-  color: #333333;
+  font-size: 19px;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.01em;
 }
 
-/* Center section */
 .center-nav {
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: 24px;
 }
 
 .center-nav div {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
-  color: #4a4a4a;
+  color: #475569;
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition: color 0.18s ease;
 }
 
 .center-nav div:hover {
-  color: #ff0000;
+  color: #dc2626;
 }
 
-/* Right section */
 .right-nav {
   display: flex;
   align-items: center;
 }
 
 .login-btn {
-  background-color: #ff0000;
+  background-color: #0f172a;
   color: white;
-  padding: 8px 24px;
-  border-radius: 8px;
+  padding: 8px 18px;
+  border-radius: 10px;
   font-weight: 600;
+  font-size: 14px;
   text-decoration: none;
-  transition: background-color 0.2s ease;
+  cursor: pointer;
+  transition: background-color 0.18s ease, transform 0.18s ease;
 }
 
 .login-btn:hover {
-  background-color: #cc0000;
+  background-color: #1e293b;
+}
+
+.login-btn:active {
+  transform: translateY(1px);
 }
