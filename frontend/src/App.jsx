@@ -10,6 +10,7 @@ import HospitalDash from './pages/HospitalDash';
 import DoctorDash from './pages/DoctorDash';
 import HospitalPatients from './pages/HospitalPatients';
 import HospitalDoctors from './pages/HospitalDoctors';
+import HospitalAppointments from './pages/HospitalAppointments';
 import Appointment from './pages/Appointment';
 import DoctorPatients from './pages/DoctorPatients';
 import DoctorAppointments from './pages/DoctorAppointments';
@@ -49,6 +50,7 @@ function App() {
         <Route path="/hospitaldash" element={<HospitalDash/>} />
         <Route path="/hospitaldash/patients" element={<HospitalPatients/>} />
         <Route path="/hospitaldash/doctors" element={<HospitalDoctors/>} />
+        <Route path="/hospitaldash/appointments" element={<HospitalAppointments/>} />
         <Route path="/doctordash" element={<DoctorDash/>} />
         <Route path="/doctordash/patients" element={<DoctorPatients/>} />
         <Route path="/doctordash/appointments" element={<DoctorAppointments/>} />

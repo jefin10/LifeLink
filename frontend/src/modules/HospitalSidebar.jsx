@@ -1,6 +1,6 @@
 import React from 'react';
 import "../style/sidebar.css";
-import { LayoutDashboard, Users, Stethoscope } from 'lucide-react';
+import { LayoutDashboard, Users, Stethoscope, CalendarCheck } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const HospitalSidebar = () => {
@@ -12,6 +12,7 @@ const HospitalSidebar = () => {
     { key: "hospitaldash", label: "Dashboard", icon: <LayoutDashboard size={16} />, to: "/hospitaldash" },
     { key: "patients",     label: "Patients",  icon: <Users size={16} />,           to: "/hospitaldash/patients" },
     { key: "doctors",      label: "Doctors",   icon: <Stethoscope size={16} />,     to: "/hospitaldash/doctors" },
+    { key: "appointments", label: "Appointments", icon: <CalendarCheck size={16} />, to: "/hospitaldash/appointments" },
   ];
 
   return (

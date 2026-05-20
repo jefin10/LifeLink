@@ -120,6 +120,33 @@ const getDoctorsByHospital = async (req, res) => {
   }
 };
 
+const getHospitalAppointments = async (req, res) => {
+  try {
+    const Appointment = require("../models/Appointment");
+    const appointments = await Appointment.find({ hospital: req.user._id })
+      .populate("patient", "name age condition phone")
+      .populate("doctor", "name specialization")
+      .sort({ date: -1 });
+
+    const formatted = appointments.map(apt => ({
+      _id: apt._id,
+      patientName: apt.patient?.name || "Unknown",
+      patientAge: apt.patient?.age,
+      condition: apt.patient?.condition || "—",
+      doctorName: apt.doctor?.name || "Unknown",
+      doctorSpec: apt.doctor?.specialization || "",
+      date: apt.date,
+      time: new Date(apt.date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      status: apt.status,
+    }));
+
+    res.json({ success: true, appointments: formatted });
+  } catch (error) {
+    console.error("getHospitalAppointments error:", error);
+    res.status(500).json({ message: "Error fetching appointments" });
+  }
+};
+
 const addPatient = async (req, res) => {
   try {
     const { name, age, condition, doctorId, phone, email } = req.body;
@@ -155,4 +182,5 @@ module.exports = {
   getDoctorsByHospital,
   getPatientData,
   addPatient,
+  getHospitalAppointments,
 };
