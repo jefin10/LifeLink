@@ -77,6 +77,28 @@ body {
 .primary-btn.solid { background: #dc2626; }
 .primary-btn.solid:hover { background: #b91c1c; }
 
+.secondary-btn {
+    background: #fff;
+    color: #0f172a;
+    border: 1px solid #e5e7eb;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.18s ease, border-color 0.18s ease;
+}
+.secondary-btn:hover { background: #f5f5f6; border-color: #d4d4d8; }
+
+.header-actions {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+}
+
 .card {
     background: #fff;
     border: 1px solid #ececef;

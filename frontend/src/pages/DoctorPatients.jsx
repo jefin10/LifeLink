@@ -1,12 +1,13 @@
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import { Search, UserRound } from "lucide-react";
+import { Search, UserRound, Download } from "lucide-react";
 import "../style/hospitalpatients.css";
 import "../style/doctor-dash.css";
 
 import DoctorNav from "../modules/DoctorNav";
 import DoctorSide from "../modules/DoctorSide";
 import { API_URL } from "../api/apiService";
+import { downloadCsv } from "../api/exportCsv";
 
 
 const DoctorPatients = () => {
@@ -48,10 +49,24 @@ const DoctorPatients = () => {
                     <DoctorSide />
                 </div>
                 <main className="doctor-main">
-                    <div className="dashboard-header">
-                        <p className="dashboard-eyebrow">Your roster</p>
-                        <h1 className="dashboard-title">Patients</h1>
-                        <p className="dashboard-subtitle">All patients under your care.</p>
+                    <div className="dashboard-header" style={{display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 12}}>
+                        <div>
+                            <p className="dashboard-eyebrow">Your roster</p>
+                            <h1 className="dashboard-title">Patients</h1>
+                            <p className="dashboard-subtitle">All patients under your care.</p>
+                        </div>
+                        <button
+                            className="secondary-btn"
+                            onClick={() => downloadCsv("my-patients.csv", filtered.map(p => ({
+                                Name: p.name,
+                                Age: p.age,
+                                Condition: p.condition,
+                                Phone: p.phone || "",
+                                Email: p.email || "",
+                            })))}
+                        >
+                            <Download size={14}/> Export
+                        </button>
                     </div>
 
                     <div className="card">

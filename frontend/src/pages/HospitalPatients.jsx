@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import { Plus, Search, X, UserRound } from "lucide-react";
+import { Plus, Search, X, UserRound, Download } from "lucide-react";
 import "../style/hospitalpatients.css";
 import HospitalNavbar from "../modules/HospitalNavbar";
 import HospitalSidebar from "../modules/HospitalSidebar";
 import { API_URL } from "../api/apiService";
+import { downloadCsv } from "../api/exportCsv";
 
 const HospitalPatients = () => {
     const [patients, setPatients] = useState([]);
@@ -111,9 +112,21 @@ const HospitalPatients = () => {
                             <h1 className="dashboard-title">Patients</h1>
                             <p className="dashboard-subtitle">All patients registered under this hospital.</p>
                         </div>
-                        <button className="primary-btn" onClick={() => setShowForm(!showForm)}>
-                            {showForm ? <><X size={16}/> Close</> : <><Plus size={16}/> Add patient</>}
-                        </button>
+                        <div className="header-actions">
+                            <button className="secondary-btn" onClick={() => downloadCsv("patients.csv", filteredPatients.map(p => ({
+                                Name: p.name,
+                                Age: p.age,
+                                Condition: p.condition,
+                                Doctor: p.doctorId?.name || "",
+                                Phone: p.phone || "",
+                                Email: p.email || "",
+                            })))}>
+                                <Download size={14}/> Export
+                            </button>
+                            <button className="primary-btn" onClick={() => setShowForm(!showForm)}>
+                                {showForm ? <><X size={16}/> Close</> : <><Plus size={16}/> Add patient</>}
+                            </button>
+                        </div>
                     </div>
 
                     {showForm && (
