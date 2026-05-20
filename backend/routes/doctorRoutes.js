@@ -1,25 +1,38 @@
 const express = require("express");
 
-
-
-
-const { loginDoctor, logoutDoctor, authMiddleware ,registerDoctor, getHospitals, getAppointments, getPatientCount, getPendingAppointments, getAllDoctors, getPatients, confirmAppointments, removeAppointment} = require("../controllers/doctorController");
+const {
+    loginDoctor,
+    logoutDoctor,
+    registerDoctor,
+    getHospitals,
+    getAppointments,
+    getPatientCount,
+    getPendingAppointments,
+    getAllDoctors,
+    getPatients,
+    confirmAppointments,
+    removeAppointment,
+} = require("../controllers/doctorController");
+const { authMiddleware } = require("../controllers/authController");
 
 const router = express.Router();
-router.post('/getall',getAllDoctors)
+
+// Public
+router.post("/getall", getAllDoctors);
 router.get("/hospitals", getHospitals);
 router.post("/register", registerDoctor);
 router.post("/login", loginDoctor);
 router.post("/logout", logoutDoctor);
+
+// Authenticated (doctor session)
 router.get("/protected", authMiddleware, (req, res) => {
     res.json({ message: `Welcome, Dr. ${req.user.name}` });
 });
-router.get("/hospitals", getHospitals); 
-router.get("/patients",getPatients);
-router.get("/appointments",getAppointments);
-router.get('/patients/count',getPatientCount);
-router.get('/appointments/pending',getPendingAppointments);
-router.post('/appointment/confirm', confirmAppointments);
-router.post('/appointment/remove', removeAppointment);
+router.get("/patients", authMiddleware, getPatients);
+router.get("/appointments", authMiddleware, getAppointments);
+router.get("/patients/count", authMiddleware, getPatientCount);
+router.get("/appointments/pending", authMiddleware, getPendingAppointments);
+router.post("/appointment/confirm", authMiddleware, confirmAppointments);
+router.post("/appointment/remove", authMiddleware, removeAppointment);
 
 module.exports = router;
