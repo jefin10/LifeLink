@@ -3,6 +3,7 @@ import axios from "axios";
 import "../style/appointment.css";
 import i2 from "../Images/3.png";
 import { useNavigate } from "react-router-dom";
+import { Calendar, Clock, Building2, Stethoscope, User, Hash, Activity, CheckCircle2 } from "lucide-react";
 import { API_URL } from "../api/apiService";
 
 const Appointment = () => {
@@ -15,7 +16,15 @@ const Appointment = () => {
   const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [condition, setCondition] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [reason, setReason] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const navigate = useNavigate();
+
+  const minDate = new Date().toISOString().split("T")[0];
 
   useEffect(() => {
     const fetchHospitals = async () => {
@@ -34,118 +43,169 @@ const Appointment = () => {
     const fetchDoctors = async () => {
       try {
         if (!selectedHospital) {
-          setDoctors([]); 
+          setDoctors([]);
+          setSelectedDoctor("");
           return;
         }
-        
+
         const response = await axios.post(
           `${API_URL}/api/doctors/getall`,
           { hospitalId: selectedHospital },
           { headers: { "Content-Type": "application/json" } }
         );
-        
+
         if (response.data && response.data.doctors) {
           setDoctors(response.data.doctors);
         } else {
           setDoctors([]);
-          console.error("No doctors data in response:", response.data);
         }
       } catch (error) {
         console.error("Error fetching doctors:", error);
         setDoctors([]);
       }
     };
-  
+
     fetchDoctors();
   }, [selectedHospital]);
 
-  const handleAppointment = async () => {
+  const handleAppointment = async (e) => {
+    e?.preventDefault?.();
+    setError("");
+    setSuccess("");
+
     if (!date || !time || !selectedDoctor || !selectedHospital || !name || !age || !condition) {
-      alert("Please fill in all fields!");
+      setError("Please fill in all required fields.");
       return;
     }
 
+    setSubmitting(true);
     try {
       const response = await axios.post(
         `${API_URL}/api/appointments/book`,
-        { date, time, doctorId: selectedDoctor, hospitalId: selectedHospital, name, age, condition },
+        { date, time, doctorId: selectedDoctor, hospitalId: selectedHospital, name, age, condition, phone, email, reason },
         { withCredentials: true }
       );
 
-      alert(response.data.message);
-      navigate("/");
-    } catch (error) {
-      console.error("Error booking appointment:", error.response?.data || error.message);
+      setSuccess(response.data.message || "Appointment booked.");
+      setTimeout(() => navigate("/"), 1400);
+    } catch (err) {
+      setError(err.response?.data?.message || "Could not book appointment.");
+    } finally {
+      setSubmitting(false);
     }
   };
+
   return (
-    <div className="container">
-      <div className="left-section">
-        <div className="left-text">
-          <div className="left-big-title">Book Your Appointment</div>
-          <div className="left-login">Ensure timely medical care with just a few clicks.</div>
+    <div className="appt-container">
+      <aside className="appt-left">
+        <div className="appt-left-inner">
+          <p className="appt-eyebrow">For patients</p>
+          <h1 className="appt-title">Book your appointment</h1>
+          <p className="appt-sub">Pick a hospital, choose a doctor, lock in a time. We'll do the rest.</p>
+
+          <ul className="appt-bullets">
+            <li><CheckCircle2 size={16} /> No phone calls or paperwork</li>
+            <li><CheckCircle2 size={16} /> See your doctor's real-time slots</li>
+            <li><CheckCircle2 size={16} /> Instant confirmation from the clinic</li>
+          </ul>
+
+          <div className="appt-image">
+            <img src={i2} alt="Healthcare illustration" />
+          </div>
         </div>
-        <div className="left-image">
-          <img src={i2} alt="Healthcare illustration" />
-        </div>
-      </div>
+      </aside>
 
-      <div className="right-section">
-        <div className="login-boxx">
-          <h1>Appointment Form</h1>
+      <main className="appt-right">
+        <form className="appt-card" onSubmit={handleAppointment}>
+          <h2>Appointment details</h2>
+          <p className="appt-card-sub">All fields marked with * are required.</p>
 
-          <label>Select Date:</label>
-          <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+          <div className="appt-grid">
+            <div className="field">
+              <label><Building2 size={14}/> Hospital *</label>
+              <select value={selectedHospital} onChange={(e) => setSelectedHospital(e.target.value)} required>
+                <option value="">Select hospital</option>
+                {hospitals.map((hospital) => (
+                  <option key={hospital._id} value={hospital._id}>{hospital.name}</option>
+                ))}
+              </select>
+            </div>
 
-          <label>Select Time:</label>
-          <select value={time} onChange={(e) => setTime(e.target.value)}>
-            <option value="">Select Time</option>
-            {[...Array(4)].map((_, i) => {
-              const hour = 8 + i;
-              const value = `${String(hour).padStart(2, "0")}:00`;
-              return <option key={value} value={value}>{hour}:00 AM</option>;
-            })}
-            <option value="12:00">12:00 PM</option>
-            {[...Array(6)].map((_, i) => {
-              const hour24 = 13 + i;
-              const display = hour24 - 12;
-              const value = `${String(hour24).padStart(2, "0")}:00`;
-              return <option key={value} value={value}>{display}:00 PM</option>;
-            })}
-          </select>
+            <div className="field">
+              <label><Stethoscope size={14}/> Doctor *</label>
+              <select value={selectedDoctor} onChange={(e) => setSelectedDoctor(e.target.value)} required disabled={!selectedHospital}>
+                <option value="">{selectedHospital ? "Select doctor" : "Choose hospital first"}</option>
+                {doctors.map((doctor) => (
+                  <option key={doctor._id} value={doctor._id}>
+                    {doctor.name}{doctor.specialization ? ` — ${doctor.specialization}` : ""}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          <label>Select Hospital:</label>
-          <select value={selectedHospital} onChange={(e) => setSelectedHospital(e.target.value)}>
-            <option value="">Select Hospital</option>
-            {hospitals.map((hospital) => (
-              <option key={hospital._id} value={hospital._id}>
-                {hospital.name} - {hospital.location}
-              </option>
-            ))}
-          </select>
+            <div className="field">
+              <label><Calendar size={14}/> Date *</label>
+              <input type="date" min={minDate} value={date} onChange={(e) => setDate(e.target.value)} required />
+            </div>
 
-          <label>Select Doctor:</label>
-          <select value={selectedDoctor} onChange={(e) => setSelectedDoctor(e.target.value)}>
-            <option value="">Select Doctor</option>
-            {doctors.map((doctor) => (
-              <option key={doctor._id} value={doctor._id}>
-                {doctor.name} - {doctor.specialization}
-              </option>
-            ))}
-          </select>
+            <div className="field">
+              <label><Clock size={14}/> Time *</label>
+              <select value={time} onChange={(e) => setTime(e.target.value)} required>
+                <option value="">Select time</option>
+                {[...Array(4)].map((_, i) => {
+                  const hour = 8 + i;
+                  const value = `${String(hour).padStart(2, "0")}:00`;
+                  return <option key={value} value={value}>{hour}:00 AM</option>;
+                })}
+                <option value="12:00">12:00 PM</option>
+                {[...Array(6)].map((_, i) => {
+                  const hour24 = 13 + i;
+                  const display = hour24 - 12;
+                  const value = `${String(hour24).padStart(2, "0")}:00`;
+                  return <option key={value} value={value}>{display}:00 PM</option>;
+                })}
+              </select>
+            </div>
 
-          <label>Patient Name:</label>
-          <input type="text" placeholder="Enter Name" value={name} onChange={(e) => setName(e.target.value)} />
+            <div className="field">
+              <label><User size={14}/> Patient name *</label>
+              <input type="text" placeholder="e.g. Priya Sharma" value={name} onChange={(e) => setName(e.target.value)} required />
+            </div>
 
-          <label>Age:</label>
-          <input type="number" placeholder="Enter Age" value={age} onChange={(e) => setAge(e.target.value)} />
+            <div className="field">
+              <label><Hash size={14}/> Age *</label>
+              <input type="number" min="0" max="150" placeholder="e.g. 32" value={age} onChange={(e) => setAge(e.target.value)} required />
+            </div>
 
-          <label>Medical Condition:</label>
-          <input placeholder="Describe your condition" value={condition} onChange={(e) => setCondition(e.target.value)} />
+            <div className="field full">
+              <label><Activity size={14}/> Medical condition *</label>
+              <input type="text" placeholder="Briefly describe the issue" value={condition} onChange={(e) => setCondition(e.target.value)} required />
+            </div>
 
-          <button onClick={handleAppointment}>Book Appointment</button>
-        </div>
-      </div>
+            <div className="field">
+              <label>Phone (optional)</label>
+              <input type="tel" placeholder="+91 98765 43210" value={phone} onChange={(e) => setPhone(e.target.value)} />
+            </div>
+
+            <div className="field">
+              <label>Email (optional)</label>
+              <input type="email" placeholder="you@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+            </div>
+
+            <div className="field full">
+              <label>Note for doctor (optional)</label>
+              <textarea rows={3} placeholder="Anything the doctor should know in advance" value={reason} onChange={(e) => setReason(e.target.value)} />
+            </div>
+          </div>
+
+          {error && <div className="appt-alert error">{error}</div>}
+          {success && <div className="appt-alert success">{success}</div>}
+
+          <button type="submit" className="appt-submit" disabled={submitting}>
+            {submitting ? "Booking…" : "Book appointment"}
+          </button>
+        </form>
+      </main>
     </div>
   );
 };
