@@ -1,47 +1,61 @@
 const Appointment = require("../models/Appointment");
 const Patient = require("../models/Patient");
-
+const Doctor = require("../models/Doctor");
+const Hospital = require("../models/Hospital");
 
 
 const handleBook = async (req, res) => {
     try {
-        const { date, time, doctorId, hospitalId, name, age, condition } = req.body;
+        const { date, time, doctorId, hospitalId, name, age, condition, phone, email, reason } = req.body;
 
         if (!date || !time || !doctorId || !hospitalId || !name || !age || !condition) {
             return res.status(400).json({ message: "All fields are required" });
         }
 
-        // Convert date and time string to Date object
-        const formatTime = (timeStr) => {
-            const [hour, minute] = timeStr.split(":");
-            const paddedHour = hour.length === 1 ? "0" + hour : hour;
-            return `${paddedHour}:${minute}`;
-          };
-      
-          // Construct a valid ISO date string
-        const appointmentDateTime = new Date(`${date}T${formatTime(time)}`);
+        // Validate refs exist
+        const [doctor, hospital] = await Promise.all([
+            Doctor.findById(doctorId),
+            Hospital.findById(hospitalId),
+        ]);
+        if (!doctor) return res.status(404).json({ message: "Doctor not found" });
+        if (!hospital) return res.status(404).json({ message: "Hospital not found" });
 
-        // Find if patient exists based on name and age
-        let patient = await Patient.findOne({ 
-            name: name,
-            age: age
+        // Build a valid Date from "YYYY-MM-DD" + "HH:MM" (24h)
+        const [hh, mm] = time.split(":");
+        const paddedHour = String(hh).padStart(2, "0");
+        const paddedMin = String(mm || "00").padStart(2, "0");
+        const appointmentDateTime = new Date(`${date}T${paddedHour}:${paddedMin}:00`);
+
+        if (Number.isNaN(appointmentDateTime.getTime())) {
+            return res.status(400).json({ message: "Invalid date or time" });
+        }
+        if (appointmentDateTime.getTime() < Date.now()) {
+            return res.status(400).json({ message: "Appointment must be in the future" });
+        }
+
+        // Match on (name + age + hospital) so two unrelated people with the
+        // same first name in different hospitals don't collide.
+        let patient = await Patient.findOne({
+            name: name.trim(),
+            age,
+            hospitalId,
         });
 
         if (patient) {
-            // If patient exists but seeing a different doctor, update the doctorId
-            if (patient.doctorId.toString() !== doctorId) {
-                patient.doctorId = doctorId;
-                patient.hospitalId = hospitalId;
-                patient.condition = condition; // Update condition as it might have changed
-                await patient.save();
-            }
+            patient.doctorId = doctorId;
+            patient.condition = condition;
+            if (phone) patient.phone = phone;
+            if (email) patient.email = email;
+            await patient.save();
         } else {
             patient = await Patient.create({
-                name,
+                name: name.trim(),
                 age,
                 condition,
-                doctorId: doctorId,
-                hospitalId: hospitalId
+                phone,
+                email,
+                doctorId,
+                hospitalId,
             });
         }
 
@@ -50,20 +64,20 @@ const handleBook = async (req, res) => {
             doctor: doctorId,
             hospital: hospitalId,
             date: appointmentDateTime,
-            status: "Pending"
+            reason,
+            status: "Pending",
         });
 
         res.status(201).json({
             message: "Appointment booked successfully",
             appointmentId: appointment._id,
-            status: appointment.status
+            status: appointment.status,
         });
-
     } catch (error) {
         console.error("Error booking appointment:", error);
-        res.status(500).json({ 
+        res.status(500).json({
             message: "Error booking appointment",
-            error: error.message 
+            error: error.message,
         });
     }
 };
