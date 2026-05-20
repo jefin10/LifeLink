@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import "../style/hospitalpatients.css"; // NEW CSS FILE
+import { Plus, Search, X, UserRound } from "lucide-react";
+import "../style/hospitalpatients.css";
 import HospitalNavbar from "../modules/HospitalNavbar";
 import HospitalSidebar from "../modules/HospitalSidebar";
 import { API_URL } from "../api/apiService";
@@ -9,13 +10,15 @@ const HospitalPatients = () => {
     const [patients, setPatients] = useState([]);
     const [doctors, setDoctors] = useState([]);
     const [showForm, setShowForm] = useState(false);
+    const [search, setSearch] = useState("");
     const [hospitalId, setHospitalId] = useState(null);
     const [newPatient, setNewPatient] = useState({
         name: "",
         age: "",
         condition: "",
         doctorId: "",
-        hospitalId: hospitalId,
+        phone: "",
+        email: "",
     });
 
     useEffect(() => {
@@ -25,7 +28,6 @@ const HospitalPatients = () => {
                     withCredentials: true,
                 });
                 setHospitalId(response.data.hospitalId);
-                setNewPatient(prev => ({ ...prev, hospitalId: response.data.hospitalId }));
             } catch (error) {
                 console.error("Error fetching hospital ID:", error);
             }
@@ -75,13 +77,23 @@ const HospitalPatients = () => {
             const response = await axios.post(`${API_URL}/api/hospital/addPatient`, newPatient, {
                 withCredentials: true,
             });
-            setPatients([...patients, response.data.patient]);
+            setPatients([response.data.patient, ...patients]);
             setShowForm(false);
-            setNewPatient({ name: "", age: "", condition: "", doctorId: "" });
+            setNewPatient({ name: "", age: "", condition: "", doctorId: "", phone: "", email: "" });
         } catch (error) {
             console.error("Error adding patient:", error);
         }
     };
+
+    const filteredPatients = useMemo(() => {
+        const q = search.trim().toLowerCase();
+        if (!q) return patients;
+        return patients.filter(p =>
+            p.name?.toLowerCase().includes(q) ||
+            p.condition?.toLowerCase().includes(q) ||
+            String(p.age).includes(q)
+        );
+    }, [patients, search]);
 
     return (
         <>
@@ -94,73 +106,102 @@ const HospitalPatients = () => {
                 </div>
                 <main className="main-content">
                     <div className="dashboard-header">
-                        <h1 className="dashboard-title">Patients</h1>
-                        <p className="dashboard-subtitle">List of all patients in the hospital</p>
-                        <button className="add-patient-btn" onClick={() => setShowForm(!showForm)}>
-                            {showForm ? "Close Form" : "Add Patient"}
+                        <div>
+                            <p className="dashboard-eyebrow">Roster</p>
+                            <h1 className="dashboard-title">Patients</h1>
+                            <p className="dashboard-subtitle">All patients registered under this hospital.</p>
+                        </div>
+                        <button className="primary-btn" onClick={() => setShowForm(!showForm)}>
+                            {showForm ? <><X size={16}/> Close</> : <><Plus size={16}/> Add patient</>}
                         </button>
                     </div>
+
                     {showForm && (
-                        <form className="patient-form" onSubmit={handleAddPatient}>
-                            <input
-                                type="text"
-                                name="name"
-                                placeholder="Patient Name"
-                                value={newPatient.name}
-                                onChange={handleChange}
-                                required
-                            />
-                            <input
-                                type="number"
-                                name="age"
-                                placeholder="Age"
-                                value={newPatient.age}
-                                onChange={handleChange}
-                                required
-                            />
-                            <input
-                                type="text"
-                                name="condition"
-                                placeholder="Condition"
-                                value={newPatient.condition}
-                                onChange={handleChange}
-                                required
-                            />
-                            <select name="doctorId" value={newPatient.doctorId} onChange={handleChange} required>
-                                <option value="">Select Doctor</option>
-                                {doctors.map((doctor) => (
-                                    <option key={doctor._id} value={doctor._id}>
-                                        {doctor.name}
-                                    </option>
-                                ))}
-                            </select>
-                            <button type="submit" className="btn-submit">Add Patient</button>
+                        <form className="card patient-form" onSubmit={handleAddPatient}>
+                            <h3 className="card-title">New patient</h3>
+                            <div className="form-grid">
+                                <div className="field">
+                                    <label>Name *</label>
+                                    <input type="text" name="name" placeholder="Full name" value={newPatient.name} onChange={handleChange} required />
+                                </div>
+                                <div className="field">
+                                    <label>Age *</label>
+                                    <input type="number" min="0" max="150" name="age" placeholder="e.g. 32" value={newPatient.age} onChange={handleChange} required />
+                                </div>
+                                <div className="field full">
+                                    <label>Condition *</label>
+                                    <input type="text" name="condition" placeholder="e.g. Hypertension" value={newPatient.condition} onChange={handleChange} required />
+                                </div>
+                                <div className="field">
+                                    <label>Doctor *</label>
+                                    <select name="doctorId" value={newPatient.doctorId} onChange={handleChange} required>
+                                        <option value="">Select doctor</option>
+                                        {doctors.map((doctor) => (
+                                            <option key={doctor._id} value={doctor._id}>
+                                                {doctor.name}{doctor.specialization ? ` — ${doctor.specialization}` : ""}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="field">
+                                    <label>Phone</label>
+                                    <input type="tel" name="phone" placeholder="Optional" value={newPatient.phone} onChange={handleChange} />
+                                </div>
+                                <div className="field full">
+                                    <label>Email</label>
+                                    <input type="email" name="email" placeholder="Optional" value={newPatient.email} onChange={handleChange} />
+                                </div>
+                            </div>
+                            <button type="submit" className="primary-btn solid">Save patient</button>
                         </form>
                     )}
-                    <div className="patients-container">
-                        {patients.length > 0 ? (
-                            <table className="patients-table">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Name</th>
-                                        <th>Age</th>
-                                        <th>Condition</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {patients.map((patient, index) => (
-                                        <tr key={index}>
-                                            <td>{patient._id}</td>
-                                            <td>{patient.name}</td>
-                                            <td>{patient.age}</td>
-                                            <td>{patient.condition}</td>
+
+                    <div className="card">
+                        <div className="card-toolbar">
+                            <div className="search-wrap">
+                                <Search size={14} />
+                                <input
+                                    placeholder="Search by name, condition, age"
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                />
+                            </div>
+                            <p className="muted">{filteredPatients.length} of {patients.length}</p>
+                        </div>
+
+                        {filteredPatients.length > 0 ? (
+                            <div className="table-scroll">
+                                <table className="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Age</th>
+                                            <th>Condition</th>
+                                            <th>Doctor</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {filteredPatients.map((patient) => (
+                                            <tr key={patient._id}>
+                                                <td>
+                                                    <div className="cell-name">
+                                                        <span className="avatar"><UserRound size={14}/></span>
+                                                        {patient.name}
+                                                    </div>
+                                                </td>
+                                                <td>{patient.age}</td>
+                                                <td>{patient.condition}</td>
+                                                <td>{patient.doctorId?.name || "—"}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         ) : (
-                            <p className="no-data">No Patients Found</p>
+                            <div className="empty-state">
+                                <UserRound size={28} />
+                                <p>No patients found{search ? " for that search" : ""}.</p>
+                            </div>
                         )}
                     </div>
                 </main>
