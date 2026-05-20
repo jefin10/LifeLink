@@ -12,6 +12,8 @@ const {
     getPatients,
     confirmAppointments,
     removeAppointment,
+    cancelAppointment,
+    completeAppointment,
 } = require("../controllers/doctorController");
 const { authMiddleware } = require("../controllers/authController");
 
@@ -33,6 +35,8 @@ router.get("/appointments", authMiddleware, getAppointments);
 router.get("/patients/count", authMiddleware, getPatientCount);
 router.get("/appointments/pending", authMiddleware, getPendingAppointments);
 router.post("/appointment/confirm", authMiddleware, confirmAppointments);
+router.post("/appointment/cancel", authMiddleware, cancelAppointment);
+router.post("/appointment/complete", authMiddleware, completeAppointment);
 router.post("/appointment/remove", authMiddleware, removeAppointment);
 
 module.exports = router;

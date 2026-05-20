@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import { CalendarCheck, Search, CheckCircle2, XCircle, Clock } from "lucide-react";
+import { CalendarCheck, Search, CheckCircle2, XCircle, Clock, Check } from "lucide-react";
 import "../style/doctor-dash.css";
 import "../style/hospitalpatients.css";
 import DoctorNav from "../modules/DoctorNav";
@@ -29,38 +29,26 @@ const DoctorAppointments = () => {
     fetchAppointments();
   }, []);
 
-  const confirmAppointment = async (id) => {
+  const updateStatus = async (id, action, newStatus) => {
     try {
       await axios.post(
-        `${API_URL}/api/doctors/appointment/confirm`,
+        `${API_URL}/api/doctors/appointment/${action}`,
         { appointmentId: id },
         { withCredentials: true }
       );
       setAppointments((prev) =>
         prev.map((apt) =>
-          apt._id === id ? { ...apt, status: "Confirmed" } : apt
+          apt._id === id ? { ...apt, status: newStatus } : apt
         )
       );
     } catch (error) {
-      console.error("Error confirming appointment:", error.response?.data || error.message);
+      console.error(`Error ${action}:`, error.response?.data || error.message);
     }
   };
 
-  const removeAppointment = async (id) => {
-    try {
-      const response = await axios.post(
-        `${API_URL}/api/doctors/appointment/remove`,
-        { appointmentId: id },
-        { withCredentials: true }
-      );
-
-      if (response.data.success) {
-        setAppointments((prev) => prev.filter((apt) => apt._id !== id));
-      }
-    } catch (error) {
-      console.error("Error removing appointment:", error.response?.data || error.message);
-    }
-  };
+  const confirmAppointment = (id) => updateStatus(id, "confirm", "Confirmed");
+  const cancelAppointment  = (id) => updateStatus(id, "cancel",  "Cancelled");
+  const completeAppointment = (id) => updateStatus(id, "complete", "Completed");
 
   const visible = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -78,6 +66,7 @@ const DoctorAppointments = () => {
     All: appointments.length,
     Pending: appointments.filter(a => a.status === "Pending").length,
     Confirmed: appointments.filter(a => a.status === "Confirmed").length,
+    Completed: appointments.filter(a => a.status === "Completed").length,
   }), [appointments]);
 
   return (
@@ -93,13 +82,13 @@ const DoctorAppointments = () => {
           <div className="dashboard-header">
             <p className="dashboard-eyebrow">Schedule</p>
             <h1 className="dashboard-title">Appointments</h1>
-            <p className="dashboard-subtitle">Confirm or cancel patient requests.</p>
+            <p className="dashboard-subtitle">Confirm, complete or cancel patient requests.</p>
           </div>
 
           <div className="card">
             <div className="card-toolbar">
               <div className="tab-row">
-                {["All", "Pending", "Confirmed"].map(tab => (
+                {["All", "Pending", "Confirmed", "Completed"].map(tab => (
                   <button
                     key={tab}
                     className={`tab ${filter === tab ? "active" : ""}`}
@@ -146,14 +135,21 @@ const DoctorAppointments = () => {
                           <span className={`status-badge ${apt.status.toLowerCase()}`}>{apt.status}</span>
                         </td>
                         <td style={{textAlign: "right"}}>
-                          {apt.status !== "Confirmed" && (
+                          {apt.status === "Pending" && (
                             <button onClick={() => confirmAppointment(apt._id)} className="row-btn confirm">
                               <CheckCircle2 size={14}/> Confirm
                             </button>
                           )}
-                          <button onClick={() => removeAppointment(apt._id)} className="row-btn cancel">
-                            <XCircle size={14}/> Remove
-                          </button>
+                          {apt.status === "Confirmed" && (
+                            <button onClick={() => completeAppointment(apt._id)} className="row-btn complete">
+                              <Check size={14}/> Complete
+                            </button>
+                          )}
+                          {apt.status !== "Cancelled" && apt.status !== "Completed" && (
+                            <button onClick={() => cancelAppointment(apt._id)} className="row-btn cancel">
+                              <XCircle size={14}/> Cancel
+                            </button>
+                          )}
                         </td>
                       </tr>
                     ))}

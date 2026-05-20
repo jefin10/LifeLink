@@ -268,6 +268,12 @@ body {
 }
 .row-btn.confirm:hover { background: #d1fae5; }
 
+.row-btn.complete {
+    background: #eef4ff;
+    color: #2563eb;
+}
+.row-btn.complete:hover { background: #dbeafe; }
+
 .row-btn.cancel {
     background: #fef2f2;
     color: #dc2626;

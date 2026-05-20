@@ -217,10 +217,62 @@ const removeAppointment = async (req, res) => {
   }
 };
 
+const cancelAppointment = async (req, res) => {
+  try {
+    const { appointmentId } = req.body;
+
+    if (!appointmentId) {
+      return res.status(400).json({ success: false, message: "Appointment ID is required" });
+    }
+
+    const updated = await Appointment.findOneAndUpdate(
+      { _id: appointmentId, doctor: req.user._id },
+      { status: "Cancelled" },
+      { new: true, runValidators: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ success: false, message: "Appointment not found" });
+    }
+
+    res.json({ success: true, message: "Appointment cancelled", appointment: updated });
+  } catch (error) {
+    console.error("Error cancelling appointment:", error);
+    res.status(500).json({ success: false, message: "Error cancelling appointment" });
+  }
+};
+
+const completeAppointment = async (req, res) => {
+  try {
+    const { appointmentId } = req.body;
+
+    if (!appointmentId) {
+      return res.status(400).json({ success: false, message: "Appointment ID is required" });
+    }
+
+    const updated = await Appointment.findOneAndUpdate(
+      { _id: appointmentId, doctor: req.user._id },
+      { status: "Completed" },
+      { new: true, runValidators: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ success: false, message: "Appointment not found" });
+    }
+
+    res.json({ success: true, message: "Marked as completed", appointment: updated });
+  } catch (error) {
+    console.error("Error completing appointment:", error);
+    res.status(500).json({ success: false, message: "Error completing appointment" });
+  }
+};
+
 
 module.exports = {
   confirmAppointments,
   removeAppointment,
+  cancelAppointment,
+  completeAppointment,
   getPatients,
   loginDoctor,
   getAllDoctors,
