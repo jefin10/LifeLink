@@ -206,6 +206,75 @@ body {
     color: #475569;
 }
 
+.tab-row {
+    display: inline-flex;
+    background: #f5f5f6;
+    border-radius: 10px;
+    padding: 4px;
+    gap: 2px;
+}
+
+.tab {
+    border: none;
+    background: transparent;
+    padding: 7px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.18s ease, color 0.18s ease;
+}
+
+.tab:hover { color: #0f172a; }
+
+.tab.active {
+    background: #0f172a;
+    color: #fff;
+}
+
+.tab-count {
+    font-size: 11px;
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.08);
+    color: inherit;
+}
+
+.tab.active .tab-count {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.row-btn {
+    border: none;
+    padding: 7px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: 6px;
+    transition: background 0.18s ease;
+}
+
+.row-btn.confirm {
+    background: #ecfdf5;
+    color: #059669;
+}
+.row-btn.confirm:hover { background: #d1fae5; }
+
+.row-btn.cancel {
+    background: #fef2f2;
+    color: #dc2626;
+}
+.row-btn.cancel:hover { background: #fee2e2; }
+
+
 .avatar {
     width: 28px;
     height: 28px;
