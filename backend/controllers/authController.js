@@ -4,9 +4,13 @@ const Patient = require('../models/Patient');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+const isProd = () => process.env.NODE_ENV === "production";
+const cookieSecure = () => process.env.COOKIE_SECURE === "true" || isProd();
+
 const generateToken = (user) => {
     return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: "1h" });
 };
+
 const registerUser = async (req, res) => {
     try {
         const { name, email, password, address, role } = req.body;
@@ -58,48 +62,47 @@ const loginUser = async (req, res) => {
 
 const checkCookies = async (req, res) => {
     try {
-      const { session_token } = req.cookies;
-      console.log(session_token);
-      if (!session_token) {
-        return res.status(401).json({ message: "No session found" });
-      }
-  
-      const doctor = await Doctor.findOne({ sessionToken: session_token });
-      if (doctor) {
-        return res.json({ role: "doctor" });
-      }
-  
-      const hospital = await Hospital.findOne({ sessionToken: session_token });
-      if (hospital) {
-        return res.json({ role: "hospital" });
-      }
-  
-      return res.status(401).json({ message: "Invalid session" });
+        const { session_token } = req.cookies;
+        if (!session_token) {
+            return res.status(401).json({ message: "No session found" });
+        }
+
+        const doctor = await Doctor.findOne({ sessionToken: session_token });
+        if (doctor) {
+            return res.json({ role: "doctor", name: doctor.name });
+        }
+
+        const hospital = await Hospital.findOne({ sessionToken: session_token });
+        if (hospital) {
+            return res.json({ role: "hospital", name: hospital.name });
+        }
+
+        return res.status(401).json({ message: "Invalid session" });
     } catch (error) {
-      res.status(500).json({ message: "Server error" });
+        res.status(500).json({ message: "Server error" });
     }
-  };
+};
 
-  const authMiddleware = async (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
     try {
-        console.log("Cookies received:", req.cookies); // Debugging
-
         const { session_token } = req.cookies;
         if (!session_token) {
             return res.status(401).json({ message: "Unauthorized: No session token" });
         }
-        console.log("going to next");
+
         let user = await Hospital.findOne({ sessionToken: session_token });
+        let role = "hospital";
 
         if (!user) {
             user = await Doctor.findOne({ sessionToken: session_token });
+            role = "doctor";
             if (!user) {
                 return res.status(401).json({ message: "Unauthorized: Invalid session" });
             }
         }
 
         req.user = user;
-        console.log("going to necxt");
+        req.role = role;
         next();
     } catch (error) {
         console.error("Auth Middleware Error:", error);
@@ -107,32 +110,39 @@ const checkCookies = async (req, res) => {
     }
 };
 
+// Clears sessionToken via $unset so users sharing a null value can't collide.
 const logout = async (req, res) => {
     try {
         const { session_token } = req.cookies;
         if (!session_token) {
             return res.status(401).json({ message: "No active session" });
         }
-        const doctor = await Doctor.findOne({ sessionToken: session_token });
-        const hospital = await Hospital.findOne({ sessionToken: session_token });
 
-        if (doctor) {
-            doctor.sessionToken = null;
-            await doctor.save();
-        } else if (hospital) {
-            hospital.sessionToken = null;
-            await hospital.save();
-        } else {
+        const doctorUpdate = await Doctor.updateOne(
+            { sessionToken: session_token },
+            { $unset: { sessionToken: "" } }
+        );
+        let cleared = doctorUpdate.modifiedCount > 0;
+
+        if (!cleared) {
+            const hospitalUpdate = await Hospital.updateOne(
+                { sessionToken: session_token },
+                { $unset: { sessionToken: "" } }
+            );
+            cleared = hospitalUpdate.modifiedCount > 0;
+        }
+
+        if (!cleared) {
             return res.status(401).json({ message: "Invalid session" });
         }
+
         res.clearCookie("session_token", {
             httpOnly: true,
-            secure: false,
-            sameSite: "Strict",
+            secure: cookieSecure(),
+            sameSite: "Lax",
         });
 
         return res.json({ message: "Logged out successfully" });
-
     } catch (error) {
         console.error("Logout Error:", error);
         res.status(500).json({ message: "Server error" });
@@ -140,4 +150,4 @@ const logout = async (req, res) => {
 };
 
 
-module.exports = { registerUser, loginUser,checkCookies ,logout,authMiddleware};
+module.exports = { registerUser, loginUser, checkCookies, logout, authMiddleware };

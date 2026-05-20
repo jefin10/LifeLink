@@ -53,20 +53,18 @@ const Patient = require("../models/Patient");
 const loginDoctor = async (req, res) => {
   const { email, password } = req.body;
 
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email and password are required" });
+  }
+
   try {
       const doctor = await Doctor.findOne({ email });
       if (!doctor) {
-          console.log("Doctor not found for email:", email);
           return res.status(401).json({ message: "Invalid credentials" });
       }
 
-      console.log("Comparing password for:", email);
-      console.log("Input password:", password);
-      console.log("Stored hash:", doctor.password);
-
       const isMatch = await bcrypt.compare(password, doctor.password);
       if (!isMatch) {
-          console.log("Password did not match for", email);
           return res.status(401).json({ message: "Invalid credentials" });
       }
 
@@ -75,14 +73,15 @@ const loginDoctor = async (req, res) => {
       doctor.sessionToken = sessionToken;
       await doctor.save();
 
-      // Set cookie
+      const secure = process.env.COOKIE_SECURE === "true" || process.env.NODE_ENV === "production";
       res.cookie("session_token", sessionToken, {
           httpOnly: true,
-          secure: false, // Use true in production with HTTPS
-          maxAge: 24 * 60 * 60 * 1000, // 1 day
+          secure,
+          sameSite: "Lax",
+          maxAge: 24 * 60 * 60 * 1000,
       });
 
-      res.json({ message: "Login successful", role: "doctor" });
+      res.json({ message: "Login successful", role: "doctor", name: doctor.name });
   } catch (error) {
       console.error("Login Error:", error);
       res.status(500).json({ message: "Server error" });

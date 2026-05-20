@@ -38,20 +38,18 @@ const registerHospital = async (req, res) => {
 const loginHospital = async (req, res) => {
   const { email, password } = req.body;
 
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email and password are required" });
+  }
+
   try {
       const hospital = await Hospital.findOne({ email });
       if (!hospital) {
-          console.log("Hospital not found for email:", email);
           return res.status(401).json({ message: "Invalid credentials" });
       }
 
-      console.log("Comparing password for:", email);
-      console.log("Input password:", password);
-      console.log("Stored hash:", hospital.password);
-
       const isMatch = await bcrypt.compare(password, hospital.password);
       if (!isMatch) {
-          console.log("Password did not match for", email);
           return res.status(401).json({ message: "Invalid credentials" });
       }
 
@@ -59,13 +57,15 @@ const loginHospital = async (req, res) => {
       hospital.sessionToken = sessionToken;
       await hospital.save();
 
+      const secure = process.env.COOKIE_SECURE === "true" || process.env.NODE_ENV === "production";
       res.cookie("session_token", sessionToken, {
           httpOnly: true,
-          secure: false, 
-          maxAge: 24 * 60 * 60 * 1000, 
+          secure,
+          sameSite: "Lax",
+          maxAge: 24 * 60 * 60 * 1000,
       });
 
-      res.json({ message: "Login successful", role: "hospital" });
+      res.json({ message: "Login successful", role: "hospital", name: hospital.name });
   } catch (error) {
       console.error("Login Error:", error);
       res.status(500).json({ message: "Server error" });
