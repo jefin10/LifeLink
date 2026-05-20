@@ -7,8 +7,8 @@ const handleBook = async (req, res) => {
     try {
         const { date, time, doctorId, hospitalId, name, age, condition } = req.body;
 
-        if (!date || !time || !doctorId || !doctorId || !name || !age || !condition) {
-            return res.status(400).json({ message: "All fields are fkn required" });
+        if (!date || !time || !doctorId || !hospitalId || !name || !age || !condition) {
+            return res.status(400).json({ message: "All fields are required" });
         }
 
         // Convert date and time string to Date object

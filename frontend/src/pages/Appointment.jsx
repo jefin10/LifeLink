@@ -102,12 +102,15 @@ const Appointment = () => {
             <option value="">Select Time</option>
             {[...Array(4)].map((_, i) => {
               const hour = 8 + i;
-              return <option key={hour} value={`${hour}:00`}>{hour}:00 AM</option>;
+              const value = `${String(hour).padStart(2, "0")}:00`;
+              return <option key={value} value={value}>{hour}:00 AM</option>;
             })}
             <option value="12:00">12:00 PM</option>
             {[...Array(6)].map((_, i) => {
-              const hour = 1 + i;
-              return <option key={hour} value={`${hour}:00`}>{hour}:00 PM</option>;
+              const hour24 = 13 + i;
+              const display = hour24 - 12;
+              const value = `${String(hour24).padStart(2, "0")}:00`;
+              return <option key={value} value={value}>{display}:00 PM</option>;
             })}
           </select>
 
