@@ -200,8 +200,8 @@ const confirmAppointments = async (req, res) => {
 
     const updatedAppointment = await Appointment.findByIdAndUpdate(
       appointmentId,
-      { status: "confirmed" },
-      { new: true } 
+      { status: "Confirmed" },
+      { new: true, runValidators: true }
     );
 
     if (!updatedAppointment) {

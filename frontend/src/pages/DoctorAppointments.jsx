@@ -93,7 +93,7 @@ const DoctorAppointments = () => {
                       <td>{apt.time}</td>
                       <td>{apt.status}</td>
                       <td>
-                        {apt.status !== "confirmed" && (
+                        {apt.status !== "Confirmed" && (
                           <button onClick={() => confirmAppointment(apt._id)} className="btn complete">
                             Confirm
                           </button>
