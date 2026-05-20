@@ -76,18 +76,16 @@ const DoctorDash = () => {
     const checkSession = async () => {
       try {
         const response = await axios.get(`${API_URL}/api/auth/check-cookies`, { withCredentials: true });
-        
-       if (response.data.role === "doctor") {
-          navigate("/doctordash");
+        if (response.data.role !== "doctor") {
+          navigate("/login");
         }
       } catch (error) {
-        
-        navigate('/login')
+        navigate('/login');
       }
     };
 
     checkSession();
-  }, []);
+  }, [navigate]);
   return (
     <div className="doctor-dash-container">
       <div className="navbar-container">
