@@ -20,3 +20,79 @@
   font-weight: 600;
   text-decoration: underline;
 }
+
+/* Shared dashboard nav */
+.app-nav {
+  height: 64px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid #ececef;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+.app-nav-inner {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+}
+.app-nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.app-nav-logo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+.app-nav-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+}
+.app-nav-divider {
+  width: 1px;
+  height: 18px;
+  background: #e5e7eb;
+  margin: 0 6px;
+}
+.app-nav-tag {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+.app-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.app-nav-user {
+  font-size: 13px;
+  font-weight: 500;
+  color: #334155;
+  padding: 6px 10px;
+  background: #f5f5f6;
+  border-radius: 999px;
+}
+.app-nav-logout {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  background: #0f172a;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+.app-nav-logout:hover { background: #1e293b; }
+.app-nav-logout:active { transform: translateY(1px); }
