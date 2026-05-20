@@ -1,101 +1,135 @@
 body {
-    background: #f8f6f6;
+    background: #f7f7f8;
+    color: #0f172a;
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
 .main-container {
     display: flex;
     min-height: 100vh;
-    background: #f8f6f6;
+    background: #f7f7f8;
 }
 
 .hospital-sidebar {
-    min-width: 220px;
+    min-width: 240px;
     background: #fff;
-    border-right: 1px solid #e7d0d0;
+    border-right: 1px solid #ececef;
     min-height: 100vh;
+    padding-top: 76px;
 }
 
 .main-content {
     flex: 1;
-    padding: 40px 48px;
+    padding: 96px 56px 56px;
     max-width: 1200px;
     margin: 0 auto;
 }
+
 .dashboard-header-text {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-}
-.dashboard-header {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    margin-bottom: 36px;
+    gap: 4px;
 }
 
-.dashboard-logo {
-    width: 64px;
-    height: 64px;
-    object-fit: contain;
-    border-radius: 12px;
-    background: #fff;
-    border: 1px solid #e7d0d0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    padding: 6px;
+.dashboard-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.dashboard-eyebrow {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
 }
 
 .dashboard-title {
     font-size: 36px;
     font-weight: 700;
-    color: #1b0e0e;
-    margin-bottom: 6px;
+    color: #0f172a;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
 }
 
 .dashboard-subtitle {
-    color: #974e4e;
-    font-size: 18px;
-    margin-top: 4px;
+    color: #6b7280;
+    font-size: 14px;
+    margin-top: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .stats-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 28px;
-    margin-bottom: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
 }
 
 .stat-card {
     background-color: #ffffff;
-    padding: 32px 28px;
-    border-radius: 16px;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-    transition: transform 0.2s, box-shadow 0.2s;
-    border: 1px solid #e7d0d0;
-    min-height: 120px;
+    padding: 20px 22px;
+    border-radius: 14px;
+    border: 1px solid #ececef;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    align-items: center;
+    gap: 16px;
 }
 
 .stat-card:hover {
-    transform: translateY(-7px) scale(1.03);
-    box-shadow: 0 6px 24px rgba(151, 78, 78, 0.08);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+    border-color: #dadde2;
 }
 
+.stat-icon-wrap {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.stat-blue { background: #eef4ff; color: #2563eb; }
+.stat-green { background: #ecfdf5; color: #059669; }
+.stat-red { background: #fef2f2; color: #dc2626; }
+.stat-yellow { background: #fffbeb; color: #d97706; }
+
 .stat-label {
-    font-size: 17px;
-    color: #974e4e;
-    margin-bottom: 12px;
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 4px;
     font-weight: 500;
 }
 
 .stat-value {
-    font-size: 32px;
+    font-size: 26px;
     font-weight: 700;
-    color: #1b0e0e;
+    color: #0f172a;
+    letter-spacing: -0.01em;
 }
-.navbar-container{
+
+.navbar-container {
     position: fixed;
-    top:0;
+    top: 0;
     left: 0;
+    right: 0;
+    z-index: 50;
+    background: #fff;
+    border-bottom: 1px solid #ececef;
+}
+
+@media (max-width: 768px) {
+    .main-content { padding: 96px 20px 32px; }
+    .dashboard-title { font-size: 28px; }
+    .hospital-sidebar { display: none; }
 }
