@@ -26,12 +26,14 @@ Built with the **MERN** stack (MongoDB, Express, React, Node.js) and fully conta
 
 ## Features
 
-- **Hospital portal** — register a hospital, view live stats (doctors, patients), manage doctors and patients in one place.
-- **Doctor portal** — calendar-driven dashboard, today's appointments, patient roster, confirm or remove appointments.
-- **Patient booking** — pick a hospital, choose a doctor, schedule a date and time, submit medical details.
-- **Cookie-based session auth** with bcrypt-hashed passwords and per-request session validation.
-- **Role-based dashboards** — separate hospital and doctor experiences sharing common building blocks.
-- **Responsive UI** built with React + Vite + Tailwind CSS with a clean, accessible layout.
+- **Hospital portal** — register a hospital, view live stats (doctors, patients, appointments), manage staff and patients, plus a hospital-wide appointment view.
+- **Doctor portal** — calendar-driven dashboard, today's appointments, patient roster, confirm / complete / cancel appointments.
+- **Patient booking** — pick a hospital, choose a doctor by specialization, schedule a date and time, leave a note for the doctor.
+- **Appointment status pipeline** — `Pending → Confirmed → Completed`, with a `Cancelled` exit state, so nothing is silently deleted.
+- **Search everywhere** — patients, doctors, and appointments are filterable by name, condition, or specialty.
+- **CSV export** — hospitals and doctors can export their patient list to CSV in one click.
+- **Cookie-based session auth** with bcrypt-hashed passwords, per-request session validation, and no shared null-token collisions.
+- **Responsive UI** built with React + Vite + Tailwind, refined for hospital and clinic environments.
 - **Dockerised** — single `docker compose up` brings the database, backend, and frontend online together.
 
 ---
@@ -218,6 +220,7 @@ Base URL: `http://localhost:5000/api`
 | GET    | `/doctors`     | List doctors in a hospital       |
 | POST   | `/addPatient`  | Add a new patient                |
 | GET    | `/me`          | Get current hospital id          |
+| GET    | `/appointments`| Hospital-wide appointment list   |
 | GET    | `/getall`      | List all hospitals (public)      |
 
 ### Doctor (`/doctors`)
@@ -232,7 +235,9 @@ Base URL: `http://localhost:5000/api`
 | GET    | `/appointments`          | All appointments                 |
 | GET    | `/appointments/pending`  | Pending appointments             |
 | POST   | `/appointment/confirm`   | Confirm an appointment           |
-| POST   | `/appointment/remove`    | Cancel / remove an appointment   |
+| POST   | `/appointment/cancel`    | Cancel an appointment            |
+| POST   | `/appointment/complete`  | Mark appointment as completed    |
+| POST   | `/appointment/remove`    | Hard-delete an appointment       |
 | POST   | `/getall`                | List all doctors for a hospital  |
 
 ### Appointment (`/appointments`)
