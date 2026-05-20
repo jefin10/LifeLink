@@ -170,3 +170,19 @@
   width: auto;
   cursor: pointer;
 }
+
+.login-error {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 13px;
+  margin: 6px 0 10px;
+  text-align: left;
+}
+
+.login-box button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

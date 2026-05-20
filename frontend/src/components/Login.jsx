@@ -5,36 +5,44 @@ import { useNavigate } from "react-router-dom";
 import api, { loginUser } from "../api/apiService";
 
 const Login = () => {
-  const [email, setEmail] = useState("jefin@gmail.com");
-  const [password, setPassword] = useState("jefin2123");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [role, setRole] = useState("doctor");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     const checkSession = async () => {
       try {
         const response = await api.get("/api/auth/check-cookies");
-        
+
         if (response.data.role === "doctor") {
           navigate("/doctordash");
         } else if (response.data.role === "hospital") {
           navigate("/hospitaldash");
         }
       } catch (error) {
-        console.log("No active session found");
+        // no active session — stay on login
       }
     };
 
     checkSession();
   }, [navigate]);
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e?.preventDefault?.();
+    setError("");
+
+    if (!email || !password) {
+      setError("Please enter your email and password.");
+      return;
+    }
+
+    setLoading(true);
     try {
       const response = await loginUser(role, email, password);
-      
-      console.log("Response:", response.data);
-      alert(response.data.message);
-      
+
       if (response.data.role === "doctor") {
         navigate("/doctordash");
       } else if (response.data.role === "hospital") {
@@ -42,9 +50,11 @@ const Login = () => {
       } else {
         navigate("/");
       }
-    } catch (error) {
-      console.error("Login Error:", error.response?.data || error.message);
-      alert("Login failed: " + (error.response?.data?.message || error.message));
+    } catch (err) {
+      const msg = err.response?.data?.message || err.message || "Login failed";
+      setError(msg);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -56,8 +66,8 @@ const Login = () => {
             Connecting Patients, Doctors, and Hospitals
           </div>
           <div className="left-login">
-            Already have an account?{" "}
-            <div className="left-login-botton" onClick={() => navigate('/regd')}>Login</div>
+            Don't have an account?{" "}
+            <span className="left-login-botton" onClick={() => navigate("/regd")}>Register</span>
           </div>
         </div>
         <div className="left-image">
@@ -65,7 +75,7 @@ const Login = () => {
         </div>
       </div>
       <div className="right-section">
-        <div className="login-box">
+        <form className="login-box" onSubmit={handleLogin}>
           <h1>Login</h1>
           <div>
             <div className="role-selector">
@@ -98,16 +108,23 @@ const Login = () => {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
+              required
             />
             <input
               type="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+              required
             />
-            <button onClick={handleLogin}>Login</button>
+            {error && <div className="login-error">{error}</div>}
+            <button type="submit" disabled={loading}>
+              {loading ? "Signing in…" : "Login"}
+            </button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );
