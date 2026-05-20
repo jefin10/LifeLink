@@ -160,17 +160,21 @@ const getPatientCount = async (req,res) => {
     console.log("uff",e);
   }
 }
-const getPatients  = async (req,res) => {
-  try{
-    const {session_token} = req.cookies;
-    if(!session_token){
-      req.status(401).json({message: "Unauth"});
+const getPatients = async (req, res) => {
+  try {
+    const { session_token } = req.cookies;
+    if (!session_token) {
+      return res.status(401).json({ message: "Unauthorized" });
     }
     const doctor = await Doctor.findOne({ sessionToken: session_token });
+    if (!doctor) {
+      return res.status(401).json({ message: "Invalid session" });
+    }
     const patients = await Patient.find({ doctorId: doctor._id });
     res.json({ success: true, patients });
-  }catch(e){
-    console.log("bru h", e);
+  } catch (e) {
+    console.error("Error fetching patients:", e);
+    res.status(500).json({ success: false, message: "Error fetching patients" });
   }
 };
 
