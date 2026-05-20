@@ -199,6 +199,13 @@ body {
     font-weight: 500;
 }
 
+.cell-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #475569;
+}
+
 .avatar {
     width: 28px;
     height: 28px;
